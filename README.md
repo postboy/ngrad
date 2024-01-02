@@ -5,7 +5,8 @@ A simple, roguelike not-quite game.  Basically I wanted to play around with gett
 ## Usage
 
 Requires Leiningen.
-    lein deps
+
+    lein deps (not sure if this is obligatory)
     lein run
 
 ## License
