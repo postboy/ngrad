@@ -5,17 +5,6 @@
            com.googlecode.lanterna.terminal.Terminal
            com.googlecode.lanterna.input.Key))
 
-
-(def colors {:black com.googlecode.lanterna.terminal.Terminal$Color/BLACK
-             :white com.googlecode.lanterna.terminal.Terminal$Color/WHITE
-             :red com.googlecode.lanterna.terminal.Terminal$Color/RED
-             :green com.googlecode.lanterna.terminal.Terminal$Color/GREEN
-             :blue com.googlecode.lanterna.terminal.Terminal$Color/BLUE
-             :cyan com.googlecode.lanterna.terminal.Terminal$Color/CYAN
-             :magenta com.googlecode.lanterna.terminal.Terminal$Color/MAGENTA
-             :yellow com.googlecode.lanterna.terminal.Terminal$Color/YELLOW
-             :default com.googlecode.lanterna.terminal.Terminal$Color/DEFAULT})
-
 (def key-kinds {com.googlecode.lanterna.input.Key$Kind/NormalKey :normal
                 com.googlecode.lanterna.input.Key$Kind/Escape :esc
                 com.googlecode.lanterna.input.Key$Kind/Backspace :bs
@@ -61,9 +50,6 @@
 
 (defn refresh [screen]
   (.refresh screen))
-
-(defn draw [screen x y s & {:keys [fg bg] :or {fg :default bg :default}}]
-  (.putString screen x y s (colors fg) (colors bg) #{}))
 
 (defn set-cursor [screen x y]
   (.setCursorPosition screen x y))

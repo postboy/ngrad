@@ -1,6 +1,8 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen draw refresh
-                         set-cursor add-resize-listener]]))
+  (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen refresh
+                         set-cursor add-resize-listener]])
+  (:require [lanterna.screen :as s]
+            [lanterna.constants :as c]))
 
 
 ; Constants -------------------------------------------------------------------
@@ -68,6 +70,9 @@
 
 
 ; Utility functions -----------------------------------------------------------
+(defn draw [screen x y s & {:keys [fg bg] :or {fg :default bg :default}}]
+  (.putString screen x y s (c/colors fg) (c/colors bg) #{}))
+
 (defn draw-message
   "Draw a message at the bottom of the screen.
 
