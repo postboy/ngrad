@@ -1,5 +1,5 @@
 (defproject kaliningrad "0.1"
-  :description "A simple, roguelike non-game."
+  :description "A simple roguelike not-quite game. Go for a walk on Russian city of Kaliningrad!"
   :url "https://github.com/postboy/kaliningrad"
   :license {:name "MIT/X11"}
   :dependencies [[org.clojure/clojure "1.4.0"]

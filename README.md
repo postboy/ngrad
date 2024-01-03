@@ -1,6 +1,6 @@
 # Kaliningrad
 
-A simple, roguelike not-quite game.  Basically I wanted to play around with getting a roguelike up and running end-to-end in Clojure.
+A simple roguelike not-quite game. Go for a walk on Russian city of Kaliningrad!
 
 ## Usage
 
