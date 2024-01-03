@@ -29,9 +29,6 @@
 (defn kill-screen [screen]
   (.stopScreen screen))
 
-(defn refresh [screen]
-  (.refresh screen))
-
 (defn get-key [screen]
   (when-let [k (.readInput screen)]
     (let [kind (c/key-codes (.getKind k))]

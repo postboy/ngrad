@@ -1,5 +1,5 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen refresh
+  (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen
                                  add-resize-listener]])
   (:require [lanterna.screen :as s]
             [lanterna.constants :as c]))
@@ -80,7 +80,7 @@
   [screen msg]
   (draw screen 0 rows msg)
   (s/move-cursor screen (inc (count msg)) rows)
-  (refresh screen))
+  (s/redraw screen))
 
 (defn draw-lines
   "Draw a sequence of lines down the left side of the screen."
@@ -90,7 +90,7 @@
     (when l
       (draw screen 0 i l)
       (recur (inc i) ls)))
-  (refresh screen))
+  (s/redraw screen))
 
 (defn get-choice
   "Get an input from the user.
@@ -139,7 +139,7 @@
     (draw screen @player-x @player-y "@")
     (draw screen 0 rows (apply str (repeat cols \space)))
     (s/move-cursor screen @player-x @player-y))
-  (refresh screen))
+  (s/redraw screen))
 
 
 ; Input/command handling ------------------------------------------------------
