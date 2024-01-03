@@ -69,15 +69,12 @@
 
 
 ; Utility functions -----------------------------------------------------------
-(defn draw [screen x y s & {:keys [fg bg] :or {fg :default bg :default}}]
-  (.putString screen x y s (c/colors fg) (c/colors bg) #{}))
-
 (defn draw-message
   "Draw a message at the bottom of the screen.
 
   Moves the cursor past the end of the message.  Refreshes the screen."
   [screen msg]
-  (draw screen 0 rows msg)
+  (s/put-string screen 0 rows msg)
   (s/move-cursor screen (inc (count msg)) rows)
   (s/redraw screen))
 
@@ -87,7 +84,7 @@
   (loop [i 0
          [l & ls] lines]
     (when l
-      (draw screen 0 i l)
+      (s/put-string screen 0 i l)
       (recur (inc i) ls)))
   (s/redraw screen))
 
@@ -130,13 +127,13 @@
   (dosync
     (doseq [y (range @canvas-rows)
             x (range @canvas-cols)]
-      (draw screen x y " "))
+      (s/put-string screen x y " "))
     (doseq [y (range rows)
             x (range cols)
             :let [{:keys [ch kind]} (@world [x y])]]
-      (draw screen x y ch :fg (item-color kind)))
-    (draw screen @player-x @player-y "@")
-    (draw screen 0 rows (apply str (repeat cols \space)))
+      (s/put-string screen x y ch {:fg (item-color kind)}))
+    (s/put-string screen @player-x @player-y "@")
+    (s/put-string screen 0 rows (apply str (repeat cols \space)))
     (s/move-cursor screen @player-x @player-y))
   (s/redraw screen))
 
