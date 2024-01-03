@@ -1,7 +1,6 @@
 (ns kaliningrad.core
   (:require [lanterna.screen :as s]))
 
-
 ; Constants -------------------------------------------------------------------
 (def rows 15)
 (def cols 40)
@@ -26,15 +25,14 @@
    "                     "
    " -- press any key -- "])
 
-
 (def dir-keys {:left :left
                :down :down
                :up :up
                :right :right})
+
 (def rake-keys {\1 "~"
                 \2 "="
                 \3 "≈"})
-
 
 (def item-color {:rock :white
                  :shrub :green
@@ -64,7 +62,6 @@
 
 (defn make-shrub []
   (new Slot :shrub "&"))
-
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
@@ -124,7 +121,6 @@
     :up    [x (dec y)]
     :down  [x (inc y)]))
 
-
 ; Rendering -------------------------------------------------------------------
 (defn render
   "Draw the world and the player on the screen."
@@ -141,7 +137,6 @@
     (s/put-string screen 0 rows (apply str (repeat cols \space)))
     (s/move-cursor screen @player-x @player-y))
   (s/redraw screen))
-
 
 ; Input/command handling ------------------------------------------------------
 (defn parse-input
@@ -161,10 +156,8 @@
       \r [:rake]
       [nil nil])))
 
-
 (defmulti handle-command
   (fn [command screen data] command))
-
 
 (defmethod handle-command nil [_ screen _]
   nil)
@@ -190,7 +183,6 @@
         (ref-set player-y y)
         (alter world assoc [x y] (make-footprint))))))
 
-
 (defn rake [dir style]
   (dosync
     (let [coords (calc-coords @player-x @player-y dir)
@@ -204,13 +196,11 @@
     (when-let [style (prompt screen "Which style [1~ 2= 3≈]?      " rake-keys)]
       (rake dir style))))
 
-
 ; World generation ------------------------------------------------------------
 (defn rand-placement [item]
   (into {} (for [_ (range (+ 5 (rand-int 5)))]
              [[(rand-int cols) (rand-int rows)]
               item])))
-
 
 (defn sand []
   (into {} (for [x (range cols)
@@ -223,12 +213,10 @@
 (defn shrubs []
   (rand-placement (make-shrub)))
 
-
 (defn generate-world []
   (let [new-world (-> (merge (sand) (rocks) (shrubs))
                     (assoc [0 0] (make-footprint)))]
     (dosync (ref-set world new-world))))
-
 
 ; Main ------------------------------------------------------------------------
 (defn intro [screen]
@@ -254,7 +242,6 @@
     (generate-world)
     (intro screen)
     (game-loop screen)))
-
 
 (defn -main [& args]
   (go))
