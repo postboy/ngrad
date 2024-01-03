@@ -88,16 +88,16 @@
   "Draw the world and the player on the screen."
   [screen]
   (dosync
-    (doseq [y (range @canvas-rows)
-            x (range @canvas-cols)]
-      (s/put-string screen x y " "))
-    (doseq [y (range rows)
-            x (range cols)
-            :let [{:keys [ch kind]} (@world [x y])]]
-      (s/put-string screen x y ch {:fg (item-color kind)}))
-    (s/put-string screen @player-x @player-y "@")
-    (s/put-string screen 0 rows (apply str (repeat cols \space)))
-    (s/move-cursor screen @player-x @player-y))
+   (doseq [y (range @canvas-rows)
+           x (range @canvas-cols)]
+     (s/put-string screen x y " "))
+   (doseq [y (range rows)
+           x (range cols)
+           :let [{:keys [ch kind]} (@world [x y])]]
+     (s/put-string screen x y ch {:fg (item-color kind)}))
+   (s/put-string screen @player-x @player-y "@")
+   (s/put-string screen 0 rows (apply str (repeat cols \space)))
+   (s/move-cursor screen @player-x @player-y))
   (s/redraw screen))
 
 ; Input/command handling ------------------------------------------------------
@@ -134,15 +134,15 @@
   Does bounds checking and ensures the player doesn't walk through solid
   objects, so a player might not actually end up moving."
   (dosync
-    (let [[x y] (calc-coords @player-x @player-y dir)
-          x (max 0 x)
-          x (min x (dec cols))
-          y (max 0 y)
-          y (min y (dec rows))]
-      (when-not (solid? (:kind (@world [x y])))
-        (ref-set player-x x)
-        (ref-set player-y y)
-        (alter world assoc [x y] (make-footprint))))))
+   (let [[x y] (calc-coords @player-x @player-y dir)
+         x (max 0 x)
+         x (min x (dec cols))
+         y (max 0 y)
+         y (min y (dec rows))]
+     (when-not (solid? (:kind (@world [x y])))
+       (ref-set player-x x)
+       (ref-set player-y y)
+       (alter world assoc [x y] (make-footprint))))))
 
 ; World generation ------------------------------------------------------------
 (defn rand-placement [item]
@@ -163,7 +163,7 @@
 
 (defn generate-world []
   (let [new-world (-> (merge (sand) (rocks) (shrubs))
-                    (assoc [0 0] (make-footprint)))]
+                      (assoc [0 0] (make-footprint)))]
     (dosync (ref-set world new-world))))
 
 ; Main ------------------------------------------------------------------------
@@ -182,8 +182,8 @@
 
 (defn handle-resize [rows cols]
   (dosync
-    (ref-set canvas-rows rows)
-    (ref-set canvas-cols cols)))
+   (ref-set canvas-rows rows)
+   (ref-set canvas-cols cols)))
 
 (defn go []
   (let [screen (get-new-screen cols (inc rows) handle-resize)]
