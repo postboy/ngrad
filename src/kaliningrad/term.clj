@@ -4,7 +4,8 @@
            com.googlecode.lanterna.screen.Screen
            com.googlecode.lanterna.terminal.Terminal
            com.googlecode.lanterna.input.Key)
-    (:require [lanterna.constants :as c]))
+  (:require [lanterna.screen :as s]
+            [lanterna.constants :as c]))
 
 (defn add-resize-listener [terminal f]
   (.addResizeListener terminal
@@ -25,15 +26,8 @@
      (add-resize-listener terminal resized-fn)
      screen)))
 
-(defn get-key [screen]
-  (when-let [k (.readInput screen)]
-    (let [kind (c/key-codes (.getKind k))]
-      (if (= kind :normal)
-        (.getCharacter k)
-        kind))))
-
 (defn get-key-blocking [screen]
-  (let [k (get-key screen)]
+  (let [k (s/get-key screen)]
     (if (nil? k)
       (do
         (Thread/sleep 100)
