@@ -1,7 +1,5 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen]])
-  (:require [lanterna.screen :as s]
-            [lanterna.constants :as c]))
+  (:require [lanterna.screen :as s]))
 
 
 ; Constants -------------------------------------------------------------------
@@ -69,6 +67,13 @@
 
 
 ; Utility functions -----------------------------------------------------------
+(defn get-new-screen
+  [cols rows resized-fn]
+  (let [screen (s/get-screen :auto)]
+    (s/start screen)
+    (s/add-resize-listener screen resized-fn)
+    screen))
+
 (defn draw-message
   "Draw a message at the bottom of the screen.
 
@@ -245,7 +250,7 @@
     (ref-set canvas-cols cols)))
 
 (defn go []
-  (let [screen (get-screen cols (inc rows) handle-resize)]
+  (let [screen (get-new-screen cols (inc rows) handle-resize)]
     (generate-world)
     (intro screen)
     (game-loop screen)))
