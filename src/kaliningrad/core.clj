@@ -19,20 +19,10 @@
 (def help-message
   [" -- COMMANDS ------- "
    " arrow keys - move   "
-   " r          - rake   "
    " q          - quit   "
    " ?          - help   "
    "                     "
    " -- press any key -- "])
-
-(def dir-keys {:left :left
-               :down :down
-               :up :up
-               :right :right})
-
-(def rake-keys {\1 "~"
-                \2 "="
-                \3 "≈"})
 
 (def item-color {:rock :white
                  :shrub :green
@@ -66,7 +56,7 @@
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
   [cols rows resized-fn]
-  (let [screen (s/get-screen :auto)]
+  (let [screen (s/get-screen :auto {:cols cols :rows rows})]
     (s/start screen)
     (s/add-resize-listener screen resized-fn)
     screen))
@@ -153,7 +143,6 @@
       :down [:move :down]
       :up [:move :up]
       :right [:move :right]
-      \r [:rake]
       [nil nil])))
 
 (defmulti handle-command
@@ -182,19 +171,6 @@
         (ref-set player-x x)
         (ref-set player-y y)
         (alter world assoc [x y] (make-footprint))))))
-
-(defn rake [dir style]
-  (dosync
-    (let [coords (calc-coords @player-x @player-y dir)
-          target (@world coords)]
-      (when (and target
-                 (= :sand (:kind target)))
-        (alter world assoc coords (make-sand style))))))
-
-(defmethod handle-command :rake [_ screen _]
-  (when-let [dir (prompt screen     "Which direction [arrow keys]?" dir-keys)]
-    (when-let [style (prompt screen "Which style [1~ 2= 3≈]?      " rake-keys)]
-      (rake dir style))))
 
 ; World generation ------------------------------------------------------------
 (defn rand-placement [item]
