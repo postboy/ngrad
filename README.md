@@ -12,6 +12,6 @@ Requires Leiningen.
 
 Copyright 2024 Zuboff Ivan
 
-Copyright 2012 Steve Losh (see his ["zen"](https://github.com/sjl/zen) project used as base for this one)
+Copyright 2012 Steve Losh (see his [zen project](https://github.com/sjl/zen) used as base for this one)
 
 MIT/X11 Licensed.
