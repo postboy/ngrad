@@ -1,6 +1,5 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen
-                                 add-resize-listener]])
+  (:use [kaliningrad.term :only [get-screen]])
   (:require [lanterna.screen :as s]
             [lanterna.constants :as c]))
 
