@@ -1,7 +1,7 @@
-(defproject zen "0.1.0-SNAPSHOT"
+(defproject kaliningrad "0.1"
   :description "A simple, roguelike non-game."
+  :url "https://github.com/postboy/kaliningrad"
   :license {:name "MIT/X11"}
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [com.googlecode.lanterna/lanterna "2.0.0"]]
-  :repositories {"sonatype-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"}
+                 [clojure-lanterna "0.9.7"]]
   :main kaliningrad.core)
