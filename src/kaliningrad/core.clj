@@ -61,15 +61,6 @@
     (s/add-resize-listener screen resized-fn)
     screen))
 
-(defn draw-message
-  "Draw a message at the bottom of the screen.
-
-  Moves the cursor past the end of the message.  Refreshes the screen."
-  [screen msg]
-  (s/put-string screen 0 rows msg)
-  (s/move-cursor screen (inc (count msg)) rows)
-  (s/redraw screen))
-
 (defn draw-lines
   "Draw a sequence of lines down the left side of the screen."
   [screen lines]
@@ -79,25 +70,6 @@
       (s/put-string screen 0 i l)
       (recur (inc i) ls)))
   (s/redraw screen))
-
-(defn get-choice
-  "Get an input from the user.
-
-  Pressing escape will return nil.  Otherwise if the user presses one of the
-  keys in the choice map, return its value.  Otherwise loop, forcing the user
-  to either give a valid input or escape."
-  [screen choices]
-  (let [k (s/get-key-blocking screen)]
-    (cond
-      (= k :esc) nil
-      (contains? choices k) (choices k)
-      :else (recur screen choices))))
-
-(defn prompt
-  "Prompt a user for some input."
-  [screen msg choices]
-  (draw-message screen msg)
-  (get-choice screen choices))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -146,9 +118,9 @@
       [nil nil])))
 
 (defmulti handle-command
-  (fn [command screen data] command))
+  (fn [command _ _] command))
 
-(defmethod handle-command nil [_ screen _]
+(defmethod handle-command nil [_ _ _]
   nil)
 
 (defmethod handle-command :help [_ screen _]
@@ -219,5 +191,5 @@
     (intro screen)
     (game-loop screen)))
 
-(defn -main [& args]
+(defn -main [& _]
   (go))
