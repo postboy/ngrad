@@ -1,5 +1,5 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen get-key-blocking
+  (:use [kaliningrad.term :only [get-screen
                                  add-resize-listener]])
   (:require [lanterna.screen :as s]
             [lanterna.constants :as c]))
@@ -99,7 +99,7 @@
   keys in the choice map, return its value.  Otherwise loop, forcing the user
   to either give a valid input or escape."
   [screen choices]
-  (let [k (get-key-blocking screen)]
+  (let [k (s/get-key-blocking screen)]
     (cond
       (= k :esc) nil
       (contains? choices k) (choices k)
@@ -149,7 +149,7 @@
   The returned value is a vector of [command-type data], where data is any
   extra metadata that might be needed (like the direction for a :move command)."
   [screen]
-  (let [k (get-key-blocking screen)]
+  (let [k (s/get-key-blocking screen)]
     (case k
       \q [:quit nil]
       \? [:help nil]
@@ -171,7 +171,7 @@
 (defmethod handle-command :help [_ screen _]
   "Draw a help message on the screen and wait for the user to press a key."
   (draw-lines screen help-message)
-  (get-key-blocking screen))
+  (s/get-key-blocking screen))
 
 (defmethod handle-command :move [_ _ dir]
   "Move the player in the given direction.
@@ -232,7 +232,7 @@
 ; Main ------------------------------------------------------------------------
 (defn intro [screen]
   (draw-lines screen welcome-message)
-  (get-key-blocking screen))
+  (s/get-key-blocking screen))
 
 (defn game-loop [screen]
   (render screen)

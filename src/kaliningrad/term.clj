@@ -25,11 +25,3 @@
      (.startScreen screen)
      (add-resize-listener terminal resized-fn)
      screen)))
-
-(defn get-key-blocking [screen]
-  (let [k (s/get-key screen)]
-    (if (nil? k)
-      (do
-        (Thread/sleep 100)
-        (recur screen))
-      k)))
