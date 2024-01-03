@@ -1,6 +1,6 @@
 (ns kaliningrad.core
   (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen refresh
-                         set-cursor add-resize-listener]])
+                                 add-resize-listener]])
   (:require [lanterna.screen :as s]
             [lanterna.constants :as c]))
 
@@ -79,7 +79,7 @@
   Moves the cursor past the end of the message.  Refreshes the screen."
   [screen msg]
   (draw screen 0 rows msg)
-  (set-cursor screen (inc (count msg)) rows)
+  (s/move-cursor screen (inc (count msg)) rows)
   (refresh screen))
 
 (defn draw-lines
@@ -138,7 +138,7 @@
       (draw screen x y ch :fg (item-color kind)))
     (draw screen @player-x @player-y "@")
     (draw screen 0 rows (apply str (repeat cols \space)))
-    (set-cursor screen @player-x @player-y))
+    (s/move-cursor screen @player-x @player-y))
   (refresh screen))
 
 

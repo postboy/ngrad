@@ -32,9 +32,6 @@
 (defn refresh [screen]
   (.refresh screen))
 
-(defn set-cursor [screen x y]
-  (.setCursorPosition screen x y))
-
 (defn get-key [screen]
   (when-let [k (.readInput screen)]
     (let [kind (c/key-codes (.getKind k))]
