@@ -3,27 +3,8 @@
            com.googlecode.lanterna.TerminalFacade
            com.googlecode.lanterna.screen.Screen
            com.googlecode.lanterna.terminal.Terminal
-           com.googlecode.lanterna.input.Key))
-
-(def key-kinds {com.googlecode.lanterna.input.Key$Kind/NormalKey :normal
-                com.googlecode.lanterna.input.Key$Kind/Escape :esc
-                com.googlecode.lanterna.input.Key$Kind/Backspace :bs
-                com.googlecode.lanterna.input.Key$Kind/ArrowLeft :left
-                com.googlecode.lanterna.input.Key$Kind/ArrowRight :right
-                com.googlecode.lanterna.input.Key$Kind/ArrowUp :up
-                com.googlecode.lanterna.input.Key$Kind/ArrowDown :down
-                com.googlecode.lanterna.input.Key$Kind/Insert :ins
-                com.googlecode.lanterna.input.Key$Kind/Delete :del
-                com.googlecode.lanterna.input.Key$Kind/Home :home
-                com.googlecode.lanterna.input.Key$Kind/End :end
-                com.googlecode.lanterna.input.Key$Kind/PageUp :page-up
-                com.googlecode.lanterna.input.Key$Kind/PageDown :page-down
-                com.googlecode.lanterna.input.Key$Kind/Tab :tab
-                com.googlecode.lanterna.input.Key$Kind/ReverseTab :reverse-tab
-                com.googlecode.lanterna.input.Key$Kind/Enter :cr
-                com.googlecode.lanterna.input.Key$Kind/Unknown :unknown
-                com.googlecode.lanterna.input.Key$Kind/CursorLocation :cursor-location})
-
+           com.googlecode.lanterna.input.Key)
+    (:require [lanterna.constants :as c]))
 
 (defn add-resize-listener [terminal f]
   (.addResizeListener terminal
@@ -56,7 +37,7 @@
 
 (defn get-key [screen]
   (when-let [k (.readInput screen)]
-    (let [kind (key-kinds (.getKind k))]
+    (let [kind (c/key-codes (.getKind k))]
       (if (= kind :normal)
         (.getCharacter k)
         kind))))
