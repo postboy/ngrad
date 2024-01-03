@@ -10,8 +10,8 @@ Requires Leiningen.
 
 ## License
 
+MIT/X11
+
 Copyright 2024 Zuboff Ivan
 
 Copyright 2012 Steve Losh (see his [zen project](https://github.com/sjl/zen) used as base for this one)
-
-MIT/X11 Licensed.
