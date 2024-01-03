@@ -7,7 +7,7 @@
 (def cols 40)
 
 (def welcome-message
-  ["Welcome to Zen."
+  ["Welcome to Kaliningrad."
    ""
    "In this game, you tend to a"
    "small zen garden."
@@ -19,18 +19,18 @@
 
 (def help-message
   [" -- COMMANDS ------- "
-   " hjkl - move         "
-   " r    - rake         "
-   " q    - quit         "
-   " ?    - help         "
+   " arrow keys - move   "
+   " r          - rake   "
+   " q          - quit   "
+   " ?          - help   "
    "                     "
    " -- press any key -- "])
 
 
-(def dir-keys {\h :left
-               \j :down
-               \k :up
-               \l :right})
+(def dir-keys {:left :left
+               :down :down
+               :up :up
+               :right :right})
 (def rake-keys {\1 "~"
                 \2 "="
                 \3 "≈"})
@@ -154,10 +154,10 @@
     (case k
       \q [:quit nil]
       \? [:help nil]
-      \h [:move :left]
-      \j [:move :down]
-      \k [:move :up]
-      \l [:move :right]
+      :left [:move :left]
+      :down [:move :down]
+      :up [:move :up]
+      :right [:move :right]
       \r [:rake]
       [nil nil])))
 
@@ -200,8 +200,8 @@
         (alter world assoc coords (make-sand style))))))
 
 (defmethod handle-command :rake [_ screen _]
-  (when-let [dir (prompt screen "Which direction [hjkl]?" dir-keys)]
-    (when-let [style (prompt screen "Which style [1~ 2= 3≈]?" rake-keys)]
+  (when-let [dir (prompt screen     "Which direction [arrow keys]?" dir-keys)]
+    (when-let [style (prompt screen "Which style [1~ 2= 3≈]?      " rake-keys)]
       (rake dir style))))
 
 
