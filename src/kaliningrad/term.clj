@@ -25,10 +25,6 @@
      (add-resize-listener terminal resized-fn)
      screen)))
 
-
-(defn kill-screen [screen]
-  (.stopScreen screen))
-
 (defn get-key [screen]
   (when-let [k (.readInput screen)]
     (let [kind (c/key-codes (.getKind k))]

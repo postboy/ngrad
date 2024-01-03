@@ -1,5 +1,5 @@
 (ns kaliningrad.core
-  (:use [kaliningrad.term :only [get-screen get-key-blocking kill-screen
+  (:use [kaliningrad.term :only [get-screen get-key-blocking
                                  add-resize-listener]])
   (:require [lanterna.screen :as s]
             [lanterna.constants :as c]))
@@ -238,7 +238,7 @@
   (render screen)
   (let [[command data] (parse-input screen)]
     (if (= command :quit)
-      (kill-screen screen)
+      (s/stop screen)
       (do
         (handle-command command screen data)
         (recur screen)))))
