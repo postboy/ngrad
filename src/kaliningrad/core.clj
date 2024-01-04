@@ -44,9 +44,6 @@
   ([] (make-sand (rand-nth ["~" "=" "≈"])))
   ([ch] (new Slot :sand ch)))
 
-(defn make-footprint []
-  (make-sand (rand-nth [":" ";"])))
-
 (defn make-rock []
   (new Slot :rock "*"))
 
@@ -141,8 +138,7 @@
          y (min y (dec rows))]
      (when-not (solid? (:kind (@world [x y])))
        (ref-set player-x x)
-       (ref-set player-y y)
-       (alter world assoc [x y] (make-footprint))))))
+       (ref-set player-y y)))))
 
 ; World generation ------------------------------------------------------------
 (defn rand-placement [item]
@@ -163,7 +159,7 @@
 
 (defn generate-world []
   (let [new-world (-> (merge (sand) (rocks) (shrubs))
-                      (assoc [0 0] (make-footprint)))]
+                      (assoc [0 0] (make-sand)))]
     (dosync (ref-set world new-world))))
 
 ; Main ------------------------------------------------------------------------
