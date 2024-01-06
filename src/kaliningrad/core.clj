@@ -40,15 +40,7 @@
 ; Data structures -------------------------------------------------------------
 (defrecord Slot [kind ch])
 
-(defn make-sand
-  ([] (make-sand (rand-nth ["~" "=" "≈"])))
-  ([ch] (new Slot :sand ch)))
-
-(defn make-rock []
-  (new Slot :rock "*"))
-
-(defn make-shrub []
-  (new Slot :shrub "&"))
+(defn make-sand [] (new Slot :sand "~"))
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
@@ -141,24 +133,13 @@
        (ref-set player-y y)))))
 
 ; World generation ------------------------------------------------------------
-(defn rand-placement [item]
-  (into {} (for [_ (range (+ 5 (rand-int 5)))]
-             [[(rand-int cols) (rand-int rows)]
-              item])))
-
 (defn sand []
   (into {} (for [x (range cols)
                  y (range rows)]
              [[x y] (make-sand)])))
 
-(defn rocks []
-  (rand-placement (make-rock)))
-
-(defn shrubs []
-  (rand-placement (make-shrub)))
-
 (defn generate-world []
-  (let [new-world (merge (sand) (rocks) (shrubs))]
+  (let [new-world (sand)]
     (dosync (ref-set world new-world))))
 
 ; Main ------------------------------------------------------------------------
