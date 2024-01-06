@@ -40,7 +40,7 @@
 ; Data structures -------------------------------------------------------------
 (defrecord Slot [kind ch])
 
-(defn make-sand [] (new Slot :sand "~"))
+(defn make-sand [ch] (new Slot :sand ch))
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
@@ -133,14 +133,36 @@
        (ref-set player-y y)))))
 
 ; World generation ------------------------------------------------------------
-(defn sand []
-  (into {} (for [x (range cols)
-                 y (range rows)]
-             [[x y] (make-sand)])))
+(defn convert-array-to-world [result array col row next-index]
+  (if (= (count array) next-index)
+    result
+    (let [ch (get array next-index)]
+      (cond
+        ; ignore it
+        (= ch \return) (recur result
+                              array
+                              col
+                              row
+                              (+ next-index 1))
+        ; go to next row
+        (= ch \newline) (recur result
+                               array
+                               0
+                               (+ row 1)
+                               (+ next-index 1))
+        ; add square
+        :else (recur (-> result
+                         (assoc [col row] (make-sand (str ch))))
+                     array
+                     (+ col 1)
+                     row
+                     (+ next-index 1))))))
 
 (defn generate-world []
-  (let [new-world (sand)]
-    (dosync (ref-set world new-world))))
+  (dosync (ref-set world
+                   (convert-array-to-world {}
+                                           (slurp "data/map.txt")
+                                           0 0 0))))
 
 ; Main ------------------------------------------------------------------------
 (defn intro [screen]
