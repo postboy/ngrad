@@ -158,8 +158,7 @@
   (rand-placement (make-shrub)))
 
 (defn generate-world []
-  (let [new-world (-> (merge (sand) (rocks) (shrubs))
-                      (assoc [0 0] (make-sand)))]
+  (let [new-world (merge (sand) (rocks) (shrubs))]
     (dosync (ref-set world new-world))))
 
 ; Main ------------------------------------------------------------------------
@@ -181,11 +180,8 @@
    (ref-set canvas-rows rows)
    (ref-set canvas-cols cols)))
 
-(defn go []
+(defn -main [& _]
   (let [screen (get-new-screen cols (inc rows) handle-resize)]
     (generate-world)
     (intro screen)
     (game-loop screen)))
-
-(defn -main [& _]
-  (go))
