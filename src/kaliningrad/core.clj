@@ -141,20 +141,20 @@
                               array
                               col
                               row
-                              (+ next-index 1))
+                              (inc next-index))
         ; go to next row
         (= ch \newline) (recur result
                                array
                                0
-                               (+ row 1)
-                               (+ next-index 1))
+                               (inc row)
+                               (inc next-index))
         ; add square
         :else (recur (-> result
                          (assoc [col row] (make-square (str ch))))
                      array
-                     (+ col 1)
+                     (inc col)
                      row
-                     (+ next-index 1))))))
+                     (inc next-index))))))
 
 (defn generate-world []
   (dosync (ref-set world
