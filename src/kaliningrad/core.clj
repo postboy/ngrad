@@ -2,9 +2,6 @@
   (:require [lanterna.screen :as s]))
 
 ; Constants -------------------------------------------------------------------
-(def rows 15)
-(def cols 40)
-
 (def welcome-message
   ["Welcome to Kaliningrad!"
    ""
@@ -119,15 +116,12 @@
 (defmethod handle-command :move [_ _ dir]
   "Move the player in the given direction.
 
-  Does bounds checking and ensures the player doesn't walk through solid
-  objects, so a player might not actually end up moving."
+  Does bounds checking via map and ensures the player doesn't walk through
+  solid objects, so a player might not actually end up moving."
   (dosync
    (let [[x y] (calc-coords @player-x @player-y dir)
-         x (max 0 x)
-         x (min x (dec cols))
-         y (max 0 y)
-         y (min y (dec rows))]
-     (when (walkable? (:ch (@world [x y])))
+         square (@world [x y])]
+     (when (and (some? square) (walkable? (:ch square)))
        (ref-set player-x x)
        (ref-set player-y y)))))
 
