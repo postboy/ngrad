@@ -22,7 +22,7 @@
    "                     "
    " -- press any key -- "])
 
-(def solid? #{:rock :shrub})
+(def walkable? #{" " "."})
 
 ; World/screen state ----------------------------------------------------------
 (def world (ref {}))
@@ -122,7 +122,7 @@
          x (min x (dec cols))
          y (max 0 y)
          y (min y (dec rows))]
-     (when-not (solid? (:kind (@world [x y])))
+     (when (walkable? (:ch (@world [x y])))
        (ref-set player-x x)
        (ref-set player-y y)))))
 
