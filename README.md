@@ -10,8 +10,10 @@ Requires Leiningen.
 
 ## License
 
-MIT/X11
+Source code: MIT/X11
 
 Copyright 2024 Zuboff Ivan
 
 Copyright 2012 Steve Losh (see his [zen project](https://github.com/sjl/zen) used as base for this one)
+
+Map data is based on [OpenStreetMap](https://www.openstreetmap.org) project and is licensed under Open Data Commons Open Database License
