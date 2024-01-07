@@ -111,6 +111,7 @@
 
 (defmethod handle-command :help [_ screen _]
   "Draw a help message on the screen and wait for the user to press a key."
+  (s/move-cursor screen 0 0)
   (draw-lines screen help-message)
   (s/get-key-blocking screen))
 
