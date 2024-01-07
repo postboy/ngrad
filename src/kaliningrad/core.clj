@@ -25,6 +25,8 @@
 (def walkable? #{" " "."})
 
 ; World/screen state ----------------------------------------------------------
+; map instead of vector seems excessive but probably will be useful in the
+; future
 (def world (ref {}))
 (def player-x (ref 0))
 (def player-y (ref 0))
@@ -32,9 +34,11 @@
 (def canvas-cols (ref 80))
 
 ; Data structures -------------------------------------------------------------
-(defrecord Slot [kind ch])
+; record instead of char/string seems excessive but probably will be useful in
+; the future
+(defrecord Square [ch])
 
-(defn make-sand [ch] (new Slot :sand ch))
+(defn make-square [ch] (new Square ch))
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
@@ -146,7 +150,7 @@
                                (+ next-index 1))
         ; add square
         :else (recur (-> result
-                         (assoc [col row] (make-sand (str ch))))
+                         (assoc [col row] (make-square (str ch))))
                      array
                      (+ col 1)
                      row
