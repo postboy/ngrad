@@ -15,7 +15,7 @@
    "Press any key to begin."])
 
 (def help-message
-  [" -- COMMANDS ------- "
+  [" ------ HELP ------- "
    " arrow keys - move   "
    " q          - quit   "
    " ?          - help   "
