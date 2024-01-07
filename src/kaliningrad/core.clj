@@ -34,8 +34,8 @@
 (def world (ref {}))
 (def player-x (ref 0))
 (def player-y (ref 0))
-(def canvas-rows (ref 80))
-(def canvas-cols (ref 24))
+(def canvas-rows (ref 24))
+(def canvas-cols (ref 80))
 
 ; Data structures -------------------------------------------------------------
 (defrecord Slot [kind ch])
