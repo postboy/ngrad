@@ -6,13 +6,11 @@
 (def cols 40)
 
 (def welcome-message
-  ["Welcome to Kaliningrad."
+  ["Welcome to Kaliningrad!"
    ""
-   "In this game, you tend to a"
-   "small zen garden."
+   "Go for a walk in Russian city located in the heart of Europe!"
    ""
-   "There is no winning, losing,"
-   "or saving."
+   "There is no winning, losing, or saving. Press ? to see help anytime."
    ""
    "Press any key to begin."])
 

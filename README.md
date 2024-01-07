@@ -1,6 +1,6 @@
 # Kaliningrad
 
-A simple roguelike not-quite game. Go for a walk on Russian city of Kaliningrad!
+A simple roguelike not-quite game. Go for a walk in Russian city of Kaliningrad, located in the heart of Europe!
 
 ## Usage
 
