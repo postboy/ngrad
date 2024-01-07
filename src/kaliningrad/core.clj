@@ -22,10 +22,6 @@
    "                     "
    " -- press any key -- "])
 
-(def item-color {:rock :white
-                 :shrub :green
-                 :sand :yellow})
-
 (def solid? #{:rock :shrub})
 
 ; World/screen state ----------------------------------------------------------
@@ -81,7 +77,7 @@
    (doseq [y (range rows)
            x (range cols)
            :let [{:keys [ch kind]} (@world [x y])]]
-     (s/put-string screen x y ch {:fg (item-color kind)}))
+     (s/put-string screen x y ch))
    (s/put-string screen @player-x @player-y "@")
    (s/put-string screen 0 rows (apply str (repeat cols \space)))
    (s/move-cursor screen @player-x @player-y))
