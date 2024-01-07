@@ -75,13 +75,14 @@
   "Draw the world and the player on the screen."
   [screen]
   (dosync
+   ; clear screen
    (doseq [y (range @canvas-rows)
            x (range @canvas-cols)]
      (s/put-string screen x y " "))
-   (doseq [y (range rows)
-           x (range cols)
-           :let [{:keys [ch]} (@world [x y])]]
-     (s/put-string screen x y ch))
+   ; draw the world
+   (doseq [[[x y] square] @world]
+     (s/put-string screen x y (:ch square)))
+   ; draw the player
    (s/put-string screen @player-x @player-y "@")
    (s/move-cursor screen @player-x @player-y))
   (s/redraw screen))
