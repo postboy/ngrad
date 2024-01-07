@@ -80,7 +80,7 @@
      (s/put-string screen x y " "))
    (doseq [y (range rows)
            x (range cols)
-           :let [{:keys [ch kind]} (@world [x y])]]
+           :let [{:keys [ch]} (@world [x y])]]
      (s/put-string screen x y ch))
    (s/put-string screen @player-x @player-y "@")
    (s/put-string screen 0 rows (apply str (repeat cols \space)))
