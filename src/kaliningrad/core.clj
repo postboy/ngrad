@@ -34,8 +34,8 @@
 (def world (ref {}))
 (def player-x (ref 0))
 (def player-y (ref 0))
-(def canvas-rows (ref rows))
-(def canvas-cols (ref cols))
+(def canvas-rows (ref 80))
+(def canvas-cols (ref 24))
 
 ; Data structures -------------------------------------------------------------
 (defrecord Slot [kind ch])
@@ -184,7 +184,7 @@
    (ref-set canvas-cols cols)))
 
 (defn -main [& _]
-  (let [screen (get-new-screen cols (inc rows) handle-resize)]
+  (let [screen (get-new-screen (ref canvas-cols) (ref canvas-rows) handle-resize)]
     (generate-world)
     (intro screen)
     (game-loop screen)))
