@@ -145,7 +145,7 @@
 
 (defn generate-world []
   (dosync (ref-set world
-                   (convert-array-to-world (slurp "data/map.txt")))))
+                   (convert-array-to-world (slurp "assets/map.txt")))))
 
 ; Main ------------------------------------------------------------------------
 (defn intro [screen]
