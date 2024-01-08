@@ -127,11 +127,11 @@
 
 ; World generation ------------------------------------------------------------
 (defn convert-array-to-world [array]
-  ((fn [result col row curr-index]
-     (if (= (count array) curr-index)
+  ((fn [result col row index]
+     (if (= (count array) index)
        result
-       (let [ch (get array curr-index)
-             next-index (inc curr-index)]
+       (let [ch (get array index)
+             next-index (inc index)]
          (cond
            ; ignore it
            (= ch \return) (recur result col row next-index)
