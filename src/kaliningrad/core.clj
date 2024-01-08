@@ -126,30 +126,30 @@
        (ref-set player-y y)))))
 
 ; World generation ------------------------------------------------------------
-(defn convert-array-to-world [result array col row next-index]
-  (if (= (count array) next-index)
+(defn convert-array-to-world [result array col row curr-index]
+  (if (= (count array) curr-index)
     result
-    (let [ch (get array next-index)]
+    (let [ch (get array curr-index)]
       (cond
         ; ignore it
         (= ch \return) (recur result
                               array
                               col
                               row
-                              (inc next-index))
+                              (inc curr-index))
         ; go to next row
         (= ch \newline) (recur result
                                array
                                0
                                (inc row)
-                               (inc next-index))
+                               (inc curr-index))
         ; add square
         :else (recur (-> result
                          (assoc [col row] (make-square (str ch))))
                      array
                      (inc col)
                      row
-                     (inc next-index))))))
+                     (inc curr-index))))))
 
 (defn generate-world []
   (dosync (ref-set world
