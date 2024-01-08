@@ -126,36 +126,26 @@
        (ref-set player-y y)))))
 
 ; World generation ------------------------------------------------------------
-(defn convert-array-to-world [result array col row curr-index]
-  (if (= (count array) curr-index)
-    result
-    (let [ch (get array curr-index)]
-      (cond
-        ; ignore it
-        (= ch \return) (recur result
-                              array
-                              col
-                              row
-                              (inc curr-index))
-        ; go to next row
-        (= ch \newline) (recur result
-                               array
-                               0
-                               (inc row)
-                               (inc curr-index))
-        ; add square
-        :else (recur (-> result
-                         (assoc [col row] (make-square (str ch))))
-                     array
-                     (inc col)
-                     row
-                     (inc curr-index))))))
+(defn convert-array-to-world [array]
+  ((fn [result col row curr-index]
+     (if (= (count array) curr-index)
+       result
+       (let [ch (get array curr-index)
+             next-index (inc curr-index)]
+         (cond
+           ; ignore it
+           (= ch \return) (recur result col row next-index)
+           ; go to next row
+           (= ch \newline) (recur result 0 (inc row) next-index)
+           ; add square
+           :else (recur (-> result
+                            (assoc [col row] (make-square (str ch))))
+                        (inc col) row next-index)))))
+   {} 0 0 0))
 
 (defn generate-world []
   (dosync (ref-set world
-                   (convert-array-to-world {}
-                                           (slurp "data/map.txt")
-                                           0 0 0))))
+                   (convert-array-to-world (slurp "data/map.txt")))))
 
 ; Main ------------------------------------------------------------------------
 (defn intro [screen]
