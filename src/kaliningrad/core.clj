@@ -62,10 +62,14 @@
   return [-1 0] and let you deal with it."
   [x y dir]
   (case dir
-    :left  [(dec x) y]
-    :right [(inc x) y]
-    :up    [x (dec y)]
-    :down  [x (inc y)]))
+    :left       [(dec x) y]
+    :right      [(inc x) y]
+    :up         [x (dec y)]
+    :down       [x (inc y)]
+    :up-left    [(dec x) (dec y)]
+    :up-right   [(inc x) (dec y)]
+    :down-left  [(dec x) (inc y)]
+    :down-right [(inc x) (inc y)]))
 
 ; Rendering -------------------------------------------------------------------
 ; player will be in center of the canvas, so move everything accordingly
@@ -122,6 +126,12 @@
       \2 [:move :down]
       \8 [:move :up]
       \6 [:move :right]
+      ; this approach is buggy because it allows walking through the walls
+      ; we need to check if there's a walkable way between start and end
+      ;\7 [:move :up-left]
+      ;\9 [:move :up-right]
+      ;\1 [:move :down-left]
+      ;\3 [:move :down-right]
       [nil nil])))
 
 (defmulti handle-command
