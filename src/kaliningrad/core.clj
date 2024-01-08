@@ -68,6 +68,22 @@
     :down  [x (inc y)]))
 
 ; Rendering -------------------------------------------------------------------
+; player will be in center of the canvas, so move everything accordingly
+(defn translate-coordinates
+  [x y]
+  (let [center-x (quot @canvas-cols 2)
+        center-y (quot @canvas-rows 2)
+        delta-x (- center-x @player-x)
+        delta-y (- center-y @player-y)]
+    [(+ x delta-x) (+ y delta-y)]))
+
+(defn inside-canvas?
+  [x y]
+  (and (>= x 0)
+       (< x @canvas-cols)
+       (>= y 0)
+       (< y @canvas-rows)))
+
 (defn render
   "Draw the world and the player on the screen."
   [screen]
@@ -78,10 +94,13 @@
      (s/put-string screen x y " "))
    ; draw the world
    (doseq [[[x y] square] @world]
-     (s/put-string screen x y (:ch square)))
-   ; draw the player
-   (s/put-string screen @player-x @player-y "@")
-   (s/move-cursor screen @player-x @player-y))
+     (let [[screen-x screen-y] (translate-coordinates x y)]
+       (when (inside-canvas? screen-x screen-y)
+         (s/put-string screen screen-x screen-y (:ch square)))))
+   ; draw the player in center of the canvas, no need to call inside-canvas?
+   (let [[screen-x screen-y] (translate-coordinates @player-x @player-y)]
+     (s/put-string screen screen-x screen-y "@")
+     (s/move-cursor screen screen-x screen-y)))
   (s/redraw screen))
 
 ; Input/command handling ------------------------------------------------------
