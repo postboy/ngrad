@@ -12,12 +12,12 @@
    "Press any key to begin."])
 
 (def help-message
-  [" ------ HELP ------- "
-   " arrow keys - move   "
-   " q          - quit   "
-   " ?          - help   "
-   "                     "
-   " -- press any key -- "])
+  [" --------- HELP --------- "
+   " numpad/arrow keys - move "
+   " q                 - quit "
+   " ?                 - help "
+   "                          "
+   " ---- press any key ----- "])
 
 (def walkable? #{" " "."})
 
@@ -118,6 +118,10 @@
       :down [:move :down]
       :up [:move :up]
       :right [:move :right]
+      \4 [:move :left]
+      \2 [:move :down]
+      \8 [:move :up]
+      \6 [:move :right]
       [nil nil])))
 
 (defmulti handle-command
