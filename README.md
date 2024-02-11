@@ -1,6 +1,6 @@
 # ngrad
 
-A simple roguelike not-quite game. Go for a walk through the city streets!
+A simple roguelike not-quite game in Clojure. Go for a walk through the city streets!
 
 ## Building
 
