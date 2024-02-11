@@ -19,7 +19,7 @@
    "                          "
    " ---- press any key ----- "])
 
-(def walkable? #{" " "."})
+(def walkable-object? #{" " "."})
 
 ; World/screen state ----------------------------------------------------------
 ; map instead of vector seems excessive but probably will be useful in the
@@ -126,13 +126,24 @@
       \2 [:move :down]
       \8 [:move :up]
       \6 [:move :right]
-      ; this approach is buggy because it allows walking through the walls
-      ; we need to check if there's a walkable way between start and end
-      ;\7 [:move :up-left]
-      ;\9 [:move :up-right]
-      ;\1 [:move :down-left]
-      ;\3 [:move :down-right]
+      \7 [:move :up-left]
+      \9 [:move :up-right]
+      \1 [:move :down-left]
+      \3 [:move :down-right]
       [nil nil])))
+
+(defn walkable?
+  "Does bounds checking via map and ensures the player doesn't walk through
+   solid objects, so a player might not actually end up moving."
+  [x y]
+  (let [dest (@world [x y])
+        path-a (@world [@player-x y])
+        path-b (@world [x @player-y])]
+    ; destination and at least one of intermediate squares in case of diagonal
+    ; moving should be walkable
+    (and (some? dest) (walkable-object? (:ch dest))
+         (or (and (some? path-a) (walkable-object? (:ch path-a)))
+             (and (some? path-b) (walkable-object? (:ch path-b)))))))
 
 (defmulti handle-command
   (fn [command _ _] command))
@@ -147,14 +158,10 @@
   (s/get-key-blocking screen))
 
 (defmethod handle-command :move [_ _ dir]
-  "Move the player in the given direction.
-
-  Does bounds checking via map and ensures the player doesn't walk through
-  solid objects, so a player might not actually end up moving."
+  "Move the player in the given direction."
   (dosync
-   (let [[x y] (calc-coords @player-x @player-y dir)
-         square (@world [x y])]
-     (when (and (some? square) (walkable? (:ch square)))
+   (let [[x y] (calc-coords @player-x @player-y dir)]
+     (when (walkable? x y)
        (ref-set player-x x)
        (ref-set player-y y)))))
 
