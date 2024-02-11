@@ -1,8 +1,8 @@
-# Kaliningrad
+# ngrad
 
-A simple roguelike not-quite game. Go for a walk in Russian city of Kaliningrad, located in the heart of Europe!
+A simple roguelike not-quite game. Go for a walk through the city streets!
 
-## Usage
+## Building
 
 Requires Leiningen.
 
@@ -12,6 +12,6 @@ Requires Leiningen.
 
 Source code: MIT/X11
 
-Copyright 2024 Zuboff Ivan
+Copyright 2024 Ivan Zuboff
 
 Copyright 2012 Steve Losh (see his [zen project](https://github.com/sjl/zen) used as base for this one)

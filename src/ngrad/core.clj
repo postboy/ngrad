@@ -1,11 +1,11 @@
-(ns kaliningrad.core
+(ns ngrad.core
   (:require [lanterna.screen :as s]))
 
 ; Constants -------------------------------------------------------------------
 (def welcome-message
-  ["Welcome to Kaliningrad!"
+  ["Welcome to Ngrad!"
    ""
-   "Go for a walk in Russian city located in the heart of Europe!"
+   "Go for a walk through the city streets!"
    ""
    "There is no winning, losing, or saving. Press ? to see help anytime."
    ""
