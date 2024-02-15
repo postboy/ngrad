@@ -39,10 +39,11 @@
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
-  [cols rows resized-fn]
+  [cols rows _] ;resized-fn
   (let [screen (s/get-screen :auto {:cols cols :rows rows})]
     (s/start screen)
-    (s/add-resize-listener screen resized-fn)
+    ; this call makes resizing work even worse
+    ;(s/add-resize-listener screen resized-fn)
     screen))
 
 (defn draw-lines
