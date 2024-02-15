@@ -103,7 +103,7 @@
          (s/put-string screen screen-x screen-y (:ch square)))))
    ; draw the player in center of the canvas, no need to call inside-canvas?
    (let [[screen-x screen-y] (translate-coordinates @player-x @player-y)]
-     (s/put-string screen screen-x screen-y "@")
+     (s/put-string screen screen-x screen-y "i")
      (s/move-cursor screen screen-x screen-y)))
   (s/redraw screen))
 
