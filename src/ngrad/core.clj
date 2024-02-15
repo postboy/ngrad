@@ -207,7 +207,7 @@
    (ref-set canvas-cols cols)))
 
 (defn -main [& _]
-  (let [screen (get-new-screen (ref canvas-cols) (ref canvas-rows) handle-resize)]
+  (let [screen (get-new-screen @canvas-cols @canvas-rows handle-resize)]
     (generate-world)
     (intro screen)
     (game-loop screen)))
