@@ -29,6 +29,7 @@
 (def player-y (ref 0))
 (def canvas-rows (ref 24))
 (def canvas-cols (ref 80))
+(def global-screen (ref nil))
 
 ; Data structures -------------------------------------------------------------
 ; record instead of char/string seems excessive but probably will be useful in
@@ -39,11 +40,11 @@
 
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
-  [cols rows _] ;resized-fn
+  [cols rows resized-fn]
   (let [screen (s/get-screen :auto {:cols cols :rows rows})]
     (s/start screen)
     ; this call makes resizing work even worse
-    ;(s/add-resize-listener screen resized-fn)
+    (s/add-resize-listener screen resized-fn)
     screen))
 
 (defn draw-lines
@@ -202,13 +203,16 @@
         (handle-command command screen data)
         (recur screen)))))
 
-(defn handle-resize [rows cols]
+(defn handle-resize [cols rows]
   (dosync
-   (ref-set canvas-rows rows)
-   (ref-set canvas-cols cols)))
+   (ref-set canvas-cols cols)
+   (ref-set canvas-rows rows))
+  (s/redraw @global-screen)
+  (render @global-screen))
 
 (defn -main [& _]
   (let [screen (get-new-screen @canvas-cols @canvas-rows handle-resize)]
+    (dosync (ref-set global-screen screen))
     (generate-world)
     (intro screen)
     (game-loop screen)))
