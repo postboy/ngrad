@@ -9,7 +9,7 @@
 (def player-y (ref 0))
 (def canvas-rows (ref 24))
 (def canvas-cols (ref 80))
-(def global-screen (ref nil))
+(def screen (ref nil))
 
 ; Data structures -------------------------------------------------------------
 ; record instead of char/string seems excessive but probably will be useful in
@@ -21,12 +21,11 @@
 (def walkable-object? #{" " "."})
 
 ; Utility functions -----------------------------------------------------------
-(defn get-new-screen
+(defn create-screen
   [cols rows resized-fn]
-  (let [screen (s/get-screen :auto {:cols cols :rows rows})]
-    (s/start screen)
-    (s/add-resize-listener screen resized-fn)
-    screen))
+  (dosync (ref-set screen (s/get-screen :auto {:cols cols :rows rows})))
+  (s/start @screen)
+  (s/add-resize-listener @screen resized-fn))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -62,30 +61,30 @@
 
 (defn render
   "Draw the world and the player on the screen."
-  [screen]
+  []
   (dosync
    ; clear screen
    (doseq [y (range @canvas-rows)
            x (range @canvas-cols)]
-     (s/put-string screen x y " "))
+     (s/put-string @screen x y " "))
    ; draw the world
    (doseq [[[x y] square] @world]
      (let [[screen-x screen-y] (translate-coordinates x y)]
        (when (inside-canvas? screen-x screen-y)
-         (s/put-string screen screen-x screen-y (:ch square)))))
+         (s/put-string @screen screen-x screen-y (:ch square)))))
    ; draw the player in center of the canvas, no need to call inside-canvas?
    (let [[screen-x screen-y] (translate-coordinates @player-x @player-y)]
-     (s/put-string screen screen-x screen-y "i")
-     (s/move-cursor screen screen-x screen-y)))
-  (s/redraw screen))
+     (s/put-string @screen screen-x screen-y "i")
+     (s/move-cursor @screen screen-x screen-y)))
+  (s/redraw @screen))
 
 ; Input/command handling ------------------------------------------------------
 (defn parse-input
   "Get a key from the user and return what command they want (if any).
    The returned value is a vector of [command-type data], where data is any
    extra metadata that might be needed (like the direction for a :move command)."
-  [screen]
-  (let [k (s/get-key-blocking screen)]
+  []
+  (let [k (s/get-key-blocking @screen)]
     (case k
       \q [:quit nil]
       :left [:move :left]
@@ -116,12 +115,12 @@
              (and (some? path-b) (walkable-object? (:ch path-b)))))))
 
 (defmulti handle-command
-  (fn [command _ _] command))
+  (fn [command _] command))
 
-(defmethod handle-command nil [_ _ _]
+(defmethod handle-command nil [_ _]
   nil)
 
-(defmethod handle-command :move [_ _ dir]
+(defmethod handle-command :move [_ dir]
   "Move the player in the given direction."
   (dosync
    (let [[x y] (calc-coords @player-x @player-y dir)]
@@ -152,24 +151,23 @@
                    (convert-array-to-world (slurp "assets/map.txt")))))
 
 ; Main ------------------------------------------------------------------------
-(defn game-loop [screen]
-  (render screen)
-  (let [[command data] (parse-input screen)]
+(defn game-loop []
+  (render)
+  (let [[command data] (parse-input)]
     (if (= command :quit)
-      (s/stop screen)
+      (s/stop @screen)
       (do
-        (handle-command command screen data)
-        (recur screen)))))
+        (handle-command command data)
+        (recur)))))
 
 (defn handle-resize [cols rows]
   (dosync
    (ref-set canvas-cols cols)
    (ref-set canvas-rows rows))
-  (s/redraw @global-screen)
-  (render @global-screen))
+  (s/redraw @screen)
+  (render))
 
 (defn -main [& _]
-  (let [screen (get-new-screen @canvas-cols @canvas-rows handle-resize)]
-    (dosync (ref-set global-screen screen))
-    (generate-world)
-    (game-loop screen)))
+  (create-screen @canvas-cols @canvas-rows handle-resize)
+  (generate-world)
+  (game-loop))
