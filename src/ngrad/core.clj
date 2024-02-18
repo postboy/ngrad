@@ -1,7 +1,7 @@
 (ns ngrad.core
   (:require [lanterna.screen :as s]))
 
-; World/screen state ----------------------------------------------------------
+; World/screen state
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
 (def world (ref {}))
@@ -11,7 +11,7 @@
 (def canvas-cols (ref 80))
 (def screen (ref nil))
 
-; Data structures -------------------------------------------------------------
+; Data structures
 ; record instead of char/string seems excessive but probably will be useful in
 ; the future
 (defrecord Square [ch])
@@ -20,7 +20,7 @@
 
 (def walkable-object? #{" " "."})
 
-; Utility functions -----------------------------------------------------------
+; Utility functions
 (defn create-screen
   [cols rows resized-fn]
   (dosync (ref-set screen (s/get-screen :auto {:cols cols :rows rows})))
@@ -42,7 +42,7 @@
     :down-left  [(dec x) (inc y)]
     :down-right [(inc x) (inc y)]))
 
-; Rendering -------------------------------------------------------------------
+; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn translate-coordinates
   [x y]
@@ -78,7 +78,7 @@
      (s/move-cursor @screen screen-x screen-y)))
   (s/redraw @screen))
 
-; Input/command handling ------------------------------------------------------
+; Input/command handling
 (defn parse-input
   "Get a key from the user and return what command they want (if any).
    The returned value is a vector of [command-type data], where data is any
@@ -128,7 +128,7 @@
        (ref-set player-x x)
        (ref-set player-y y)))))
 
-; World generation ------------------------------------------------------------
+; World creation
 (defn convert-array-to-world [array]
   ((fn [result col row index]
      (if (= (count array) index)
@@ -146,11 +146,11 @@
                         (inc col) row next-index)))))
    {} 0 0 0))
 
-(defn generate-world []
+(defn create-world []
   (dosync (ref-set world
                    (convert-array-to-world (slurp "assets/map.txt")))))
 
-; Main ------------------------------------------------------------------------
+; Main
 (defn game-loop []
   (render)
   (let [[command data] (parse-input)]
@@ -169,5 +169,5 @@
 
 (defn -main [& _]
   (create-screen @canvas-cols @canvas-rows handle-resize)
-  (generate-world)
+  (create-world)
   (game-loop))
