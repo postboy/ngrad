@@ -1,9 +1,6 @@
 (ns ngrad.core
   (:require [lanterna.screen :as s]))
 
-; Constants -------------------------------------------------------------------
-(def walkable-object? #{" " "."})
-
 ; World/screen state ----------------------------------------------------------
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
@@ -21,6 +18,8 @@
 
 (defn make-square [ch] (new Square ch))
 
+(def walkable-object? #{" " "."})
+
 ; Utility functions -----------------------------------------------------------
 (defn get-new-screen
   [cols rows resized-fn]
@@ -31,9 +30,8 @@
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
-
-  Does not do any bounds checking, so (calc-coords 0 0 :left) will
-  return [-1 0] and let you deal with it."
+   Does not do any bounds checking, so (calc-coords 0 0 :left) will
+   return [-1 0] and let you deal with it."
   [x y dir]
   (case dir
     :left       [(dec x) y]
@@ -84,9 +82,8 @@
 ; Input/command handling ------------------------------------------------------
 (defn parse-input
   "Get a key from the user and return what command they want (if any).
-
-  The returned value is a vector of [command-type data], where data is any
-  extra metadata that might be needed (like the direction for a :move command)."
+   The returned value is a vector of [command-type data], where data is any
+   extra metadata that might be needed (like the direction for a :move command)."
   [screen]
   (let [k (s/get-key-blocking screen)]
     (case k
