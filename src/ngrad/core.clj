@@ -43,7 +43,6 @@
   [cols rows resized-fn]
   (let [screen (s/get-screen :auto {:cols cols :rows rows})]
     (s/start screen)
-    ; this call makes resizing work even worse
     (s/add-resize-listener screen resized-fn)
     screen))
 
