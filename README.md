@@ -2,6 +2,8 @@
 
 A simple roguelike not-quite game in Clojure. Go for a walk through the city streets!
 
+There is no winning, losing, or saving. Press ? to see help anytime.
+
 ## Building
 
 Requires Leiningen.

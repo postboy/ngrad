@@ -2,15 +2,6 @@
   (:require [lanterna.screen :as s]))
 
 ; Constants -------------------------------------------------------------------
-(def welcome-message
-  ["Welcome to Ngrad!"
-   ""
-   "Go for a walk through the city streets!"
-   ""
-   "There is no winning, losing, or saving. Press ? to see help anytime."
-   ""
-   "Press any key to begin."])
-
 (def help-message
   [" --------- HELP --------- "
    " numpad/arrow keys - move "
@@ -189,10 +180,6 @@
                    (convert-array-to-world (slurp "assets/map.txt")))))
 
 ; Main ------------------------------------------------------------------------
-(defn intro [screen]
-  (draw-lines screen welcome-message)
-  (s/get-key-blocking screen))
-
 (defn game-loop [screen]
   (render screen)
   (let [[command data] (parse-input screen)]
@@ -213,5 +200,4 @@
   (let [screen (get-new-screen @canvas-cols @canvas-rows handle-resize)]
     (dosync (ref-set global-screen screen))
     (generate-world)
-    (intro screen)
     (game-loop screen)))
