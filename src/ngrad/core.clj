@@ -2,14 +2,6 @@
   (:require [lanterna.screen :as s]))
 
 ; Constants -------------------------------------------------------------------
-(def help-message
-  [" --------- HELP --------- "
-   " numpad/arrow keys - move "
-   " q                 - quit "
-   " ?                 - help "
-   "                          "
-   " ---- press any key ----- "])
-
 (def walkable-object? #{" " "."})
 
 ; World/screen state ----------------------------------------------------------
@@ -36,16 +28,6 @@
     (s/start screen)
     (s/add-resize-listener screen resized-fn)
     screen))
-
-(defn draw-lines
-  "Draw a sequence of lines down the left side of the screen."
-  [screen lines]
-  (loop [i 0
-         [l & ls] lines]
-    (when l
-      (s/put-string screen 0 i l)
-      (recur (inc i) ls)))
-  (s/redraw screen))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -109,7 +91,6 @@
   (let [k (s/get-key-blocking screen)]
     (case k
       \q [:quit nil]
-      \? [:help nil]
       :left [:move :left]
       :down [:move :down]
       :up [:move :up]
@@ -142,12 +123,6 @@
 
 (defmethod handle-command nil [_ _ _]
   nil)
-
-(defmethod handle-command :help [_ screen _]
-  "Draw a help message on the screen and wait for the user to press a key."
-  (s/move-cursor screen 0 0)
-  (draw-lines screen help-message)
-  (s/get-key-blocking screen))
 
 (defmethod handle-command :move [_ _ dir]
   "Move the player in the given direction."
