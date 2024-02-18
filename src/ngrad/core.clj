@@ -7,8 +7,8 @@
 (def world (ref {}))
 (def player-x (ref 0))
 (def player-y (ref 0))
-(def canvas-rows (ref 24))
-(def canvas-cols (ref 80))
+(def canvas-cols (ref 0))
+(def canvas-rows (ref 0))
 (def screen (ref nil))
 
 ; Data structures
@@ -22,10 +22,15 @@
 
 ; Utility functions
 (defn create-screen
-  [cols rows resized-fn]
-  (dosync (ref-set screen (s/get-screen :auto {:cols cols :rows rows})))
+  [resized-fn]
+  (dosync (ref-set screen (s/get-screen :auto)))
   (s/start @screen)
-  (s/add-resize-listener @screen resized-fn))
+  ; for some reason, this works better than setting :resize-listener argument
+  ; to get-screen
+  (s/add-resize-listener @screen resized-fn)
+  (let [[cols rows] (s/get-size @screen)]
+    (dosync (ref-set canvas-cols cols)
+            (ref-set canvas-rows rows))))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -64,8 +69,8 @@
   []
   (dosync
    ; clear screen
-   (doseq [y (range @canvas-rows)
-           x (range @canvas-cols)]
+   (doseq [x (range @canvas-cols)
+           y (range @canvas-rows)]
      (s/put-string @screen x y " "))
    ; draw the world
    (doseq [[[x y] square] @world]
@@ -168,6 +173,6 @@
   (render))
 
 (defn -main [& _]
-  (create-screen @canvas-cols @canvas-rows handle-resize)
+  (create-screen handle-resize)
   (create-world)
   (game-loop))
