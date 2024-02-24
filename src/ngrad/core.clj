@@ -169,7 +169,9 @@
   (dosync
    (ref-set canvas-cols cols)
    (ref-set canvas-rows rows))
+  ; for some reason, (redraw) inside (render) is not enough
   (s/redraw @screen)
+  ; we need to re-render the screen
   (render))
 
 (defn -main [& _]
