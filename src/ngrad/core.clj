@@ -170,9 +170,8 @@
         (recur)))))
 
 (defn handle-resize [cols rows]
-  (dosync
-   (ref-set canvas-cols cols)
-   (ref-set canvas-rows rows))
+  (dosync (ref-set canvas-cols cols)
+          (ref-set canvas-rows rows))
   ; for some reason, (redraw) inside (render) is not enough
   (s/redraw @screen)
   ; we need to re-render the screen
