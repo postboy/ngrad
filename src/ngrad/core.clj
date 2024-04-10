@@ -1,5 +1,6 @@
 (ns ngrad.core
-  (:require [lanterna.screen :as s]))
+  (:require [lanterna.screen :as s]
+            [clojure.string :as str]))
 
 ; World/screen state
 ; map instead of vector seems excessive but probably will be useful in the
@@ -152,8 +153,11 @@
    {} 0 0 0))
 
 (defn create-world []
-  (dosync (ref-set world
-                   (convert-array-to-world (slurp "assets/map.txt")))))
+  (let [spawn-text (slurp "assets/spawn.txt")
+        [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))]
+    (dosync (ref-set world (convert-array-to-world (slurp "assets/map.txt")))
+            (ref-set player-x x)
+            (ref-set player-y y))))
 
 ; Main
 (defn game-loop []
