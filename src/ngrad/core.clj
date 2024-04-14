@@ -153,9 +153,9 @@
    {} 0 0 0))
 
 (defn create-world []
-  (let [spawn-text (slurp "assets/spawn.txt")
+  (let [spawn-text (slurp "assets/town/spawn.txt")
         [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))]
-    (dosync (ref-set world (convert-array-to-world (slurp "assets/map.txt")))
+    (dosync (ref-set world (convert-array-to-world (slurp "assets/town/map.txt")))
             (ref-set player-x x)
             (ref-set player-y y))))
 
