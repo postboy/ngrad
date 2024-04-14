@@ -20,6 +20,8 @@
 (defn make-square [ch] (new Square ch))
 
 (def walkable-object? #{" " "."})
+; TODO: useless for Bennu
+;(defn walkable-object? [_] true)
 
 ; Utility functions
 (defn create-screen
@@ -107,6 +109,7 @@
       \3 [:move :down-right]
       [nil nil])))
 
+; TODO: edit for Bennu by adding wraparound
 (defn walkable?
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
