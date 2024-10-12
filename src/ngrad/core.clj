@@ -19,9 +19,7 @@
 
 (defn make-square [ch] (new Square ch))
 
-(def walkable-object? #{" " "."})
-; TODO: useless for Bennu
-;(defn walkable-object? [_] true)
+(def walkable-object? #{"\\" "_" "|"})
 
 ; Utility functions
 (defn create-screen
@@ -109,19 +107,13 @@
       \3 [:move :down-right]
       [nil nil])))
 
-; TODO: edit for Bennu by adding wraparound
+; TODO: edit by adding wraparound
 (defn walkable?
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
   [x y]
-  (let [dest (@world [x y])
-        path-a (@world [@player-x y])
-        path-b (@world [x @player-y])]
-    ; destination and at least one of intermediate squares in case of diagonal
-    ; moving should be walkable
-    (and (some? dest) (walkable-object? (:ch dest))
-         (or (and (some? path-a) (walkable-object? (:ch path-a)))
-             (and (some? path-b) (walkable-object? (:ch path-b)))))))
+  (let [dest (@world [x y])]
+    (and (some? dest) (walkable-object? (:ch dest)))))
 
 (defmulti handle-command
   (fn [command _] command))
@@ -156,9 +148,9 @@
    {} 0 0 0))
 
 (defn create-world []
-  (let [spawn-text (slurp "assets/town/spawn.txt")
+  (let [spawn-text (slurp "assets/mountain/spawn.txt")
         [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))]
-    (dosync (ref-set world (convert-array-to-world (slurp "assets/town/map.txt")))
+    (dosync (ref-set world (convert-array-to-world (slurp "assets/mountain/map.txt")))
             (ref-set player-x x)
             (ref-set player-y y))))
 
