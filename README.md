@@ -1,6 +1,6 @@
 # ngrad
 
-A simple roguelike not-quite game in Clojure. Go climb the mountain!
+A simple roguelike not-quite game in Clojure. Go climb a virtual mountain here!
 
 There is no winning, losing, or saving. Use numpad or arrow keys for moving. Press q to exit.
 
