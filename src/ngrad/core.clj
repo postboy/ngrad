@@ -51,17 +51,17 @@
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
-(defn translate-coordinates
-  [x y func]
+(defn screen-to-world
+  [x y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
         delta-x (- center-x @player-x)
         delta-y (- center-y @player-y)]
-    [(func x delta-x) (func y delta-y)]))
+    [(- x delta-x) (- y delta-y)]))
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (translate-coordinates screen-x screen-y -)
+  (let [[world-x world-y] (screen-to-world screen-x screen-y)
         square (@world [world-x world-y])]
     (if (some? square)
       (:ch square)
@@ -76,9 +76,10 @@
            y (range @canvas-rows)]
      (s/put-string @screen x y (get-rendered-square x y)))
    ; draw the player in center of the canvas
-   (let [[screen-x screen-y] (translate-coordinates @player-x @player-y +)]
-     (s/put-string @screen screen-x screen-y "i")
-     (s/move-cursor @screen screen-x screen-y)))
+   (let [center-x (quot @canvas-cols 2)
+         center-y (quot @canvas-rows 2)]
+     (s/put-string @screen center-x center-y "i")
+     (s/move-cursor @screen center-x center-y)))
   (s/redraw @screen))
 
 ; Input/command handling
@@ -127,7 +128,7 @@
        (ref-set player-y y)))))
 
 ; World creation
-(defn convert-array-to-world [array]
+(defn array-to-world [array]
   ((fn [world widths col row index]
      (if (= (count array) index)
        [world widths]
@@ -145,7 +146,7 @@
 (defn create-world []
   (let [spawn-text (slurp "assets/spawn.txt")
         [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))
-        [local-world local-widths] (convert-array-to-world (slurp "assets/map.txt"))]
+        [local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world)
             (ref-set world-row-widths local-widths)
             (ref-set player-x x)
