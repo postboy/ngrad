@@ -37,15 +37,11 @@
 (defn wraparound
   "Very simplistic, physically incorrect wraparound algorithm for mountain."
   [x y]
-  ; no need for correction if x is already correct
   ; don't correct anything if there's no such row in world-row-widths
   (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
     (let [width (get @world-row-widths y)]
-      ; if user sees no more than a half of this row
-      (if (>= width (* @canvas-cols 2))
-        [(mod x width) y]
-        [x y]))))
+      [(mod x width) y])))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
