@@ -52,35 +52,31 @@
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn translate-coordinates
-  [x y]
+  [x y func]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
         delta-x (- center-x @player-x)
         delta-y (- center-y @player-y)]
-    [(+ x delta-x) (+ y delta-y)]))
+    [(func x delta-x) (func y delta-y)]))
 
-(defn inside-canvas?
-  [x y]
-  (and (>= x 0)
-       (< x @canvas-cols)
-       (>= y 0)
-       (< y @canvas-rows)))
+(defn get-rendered-square
+  [screen-x screen-y]
+  (let [[world-x world-y] (translate-coordinates screen-x screen-y -)
+        square (@world [world-x world-y])]
+    (if (some? square)
+      (:ch square)
+      " ")))
 
 (defn render
   "Draw the world and the player on the screen."
   []
   (dosync
-   ; clear screen
+   ; draw the world
    (doseq [x (range @canvas-cols)
            y (range @canvas-rows)]
-     (s/put-string @screen x y " "))
-   ; draw the world
-   (doseq [[[x y] square] @world]
-     (let [[screen-x screen-y] (translate-coordinates x y)]
-       (when (inside-canvas? screen-x screen-y)
-         (s/put-string @screen screen-x screen-y (:ch square)))))
-   ; draw the player in center of the canvas, no need to call inside-canvas?
-   (let [[screen-x screen-y] (translate-coordinates @player-x @player-y)]
+     (s/put-string @screen x y (get-rendered-square x y)))
+   ; draw the player in center of the canvas
+   (let [[screen-x screen-y] (translate-coordinates @player-x @player-y +)]
      (s/put-string @screen screen-x screen-y "i")
      (s/move-cursor @screen screen-x screen-y)))
   (s/redraw @screen))
