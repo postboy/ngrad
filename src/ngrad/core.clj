@@ -39,10 +39,13 @@
   [x y]
   ; no need for correction if x is already correct
   ; don't correct anything if there's no such row in world-row-widths
-  (if (or (and (>= x 0) (< x @canvas-cols)) (not (>= y 0)) (not (< y @canvas-rows)))
+  (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
-    (let [_ (get world-row-widths y)]
-      [x y])))
+    (let [width (get @world-row-widths y)]
+      ; if user sees no more than a half of this row
+      (if (>= width (* @canvas-cols 2))
+        [(mod x width) y]
+        [x y]))))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -115,7 +118,6 @@
       \3 [:move :down-right]
       [nil nil])))
 
-; TODO: edit by adding wraparound
 (defn walkable?
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
