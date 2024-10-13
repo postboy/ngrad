@@ -6,6 +6,7 @@
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
 (def world (ref {}))
+(def world-row-widths (ref []))
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def canvas-cols (ref 0))
@@ -131,30 +132,29 @@
 
 ; World creation
 (defn convert-array-to-world [array]
-  ((fn [result col row index]
+  ((fn [world widths col row index]
      (if (= (count array) index)
-       result
+       [world widths]
        (let [ch (get array index)
              next-index (inc index)]
          (cond
-           ; ignore it
-           (= ch \return) (recur result col row next-index)
            ; go to next row
-           (= ch \newline) (recur result 0 (inc row) next-index)
+           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
-           :else (recur (-> result
+           :else (recur (-> world
                             (assoc [col row] (make-square (str ch))))
-                        (inc col) row next-index)))))
-   {} 0 0 0))
+                        widths (inc col) row next-index)))))
+   {} [] 0 0 0))
 
 (defn create-world []
   (let [spawn-text (slurp "assets/spawn.txt")
-        [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))]
-    (dosync (ref-set world (convert-array-to-world (slurp "assets/map.txt")))
+        [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))
+        [local-world local-widths] (convert-array-to-world (slurp "assets/map.txt"))]
+    (dosync (ref-set world local-world)
+            (ref-set world-row-widths local-widths)
             (ref-set player-x x)
             (ref-set player-y y))))
 
-; Main
 (defn game-loop []
   (render)
   (let [[command data] (parse-input)]
