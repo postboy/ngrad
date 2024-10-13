@@ -34,6 +34,16 @@
     (dosync (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
+(defn wraparound
+  "Very simplistic, physically incorrect wraparound algorithm for mountain."
+  [x y]
+  ; no need for correction if x is already correct
+  ; don't correct anything if there's no such row in world-row-widths
+  (if (or (and (>= x 0) (< x @canvas-cols)) (not (>= y 0)) (not (< y @canvas-rows)))
+    [x y]
+    (let [_ (get world-row-widths y)]
+      [x y])))
+
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
    Does not do any bounds checking, so (calc-coords 0 0 :left) will
@@ -61,7 +71,7 @@
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (screen-to-world screen-x screen-y)
+  (let [[world-x world-y] (apply wraparound (screen-to-world screen-x screen-y))
         square (@world [world-x world-y])]
     (if (some? square)
       (:ch square)
@@ -122,7 +132,7 @@
 (defmethod handle-command :move [_ dir]
   "Move the player in the given direction."
   (dosync
-   (let [[x y] (calc-coords @player-x @player-y dir)]
+   (let [[x y] (apply wraparound (calc-coords @player-x @player-y dir))]
      (when (walkable? x y)
        (ref-set player-x x)
        (ref-set player-y y)))))
