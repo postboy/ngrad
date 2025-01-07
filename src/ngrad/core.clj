@@ -41,10 +41,7 @@
   (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
     (let [width (get @world-row-widths y)]
-      ; correct only off-by-one errors
-      (if (or (= x -1) (= x width))
-        [(mod x width) y]
-        [x y]))))
+      [(mod x width) y])))
 
 (defn mirror-map-edge
   [square]
@@ -81,12 +78,12 @@
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (screen-to-world screen-x screen-y)
-        square (@world [world-x world-y])]
+  (let [[world-x world-y] (screen-to-world screen-x screen-y)]
     ; maybe do mirroring here, not on the map
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
-      (let [width (get @world-row-widths world-y)
+      (let [square (@world [world-x world-y])            
+            width (get @world-row-widths world-y)
             center-x (quot @canvas-cols 2)
             screen-width (quot width 2)
             left-corner (- center-x (quot screen-width 2) (rem screen-width 2))
