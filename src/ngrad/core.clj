@@ -168,7 +168,9 @@
        (let [ch (get array index)
              next-index (inc index)]
          (cond
-           ; go to next row, but add left edge of the mountain mirrored to right edge
+           ; ignore it
+           (= ch \return) (recur world widths col row next-index)
+           ; go to next row
            (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
