@@ -40,7 +40,8 @@
   ; don't correct anything if there's no such row in world-row-widths
   (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
-    [(mod x (get @world-row-widths y)) y]))
+    ; decrement because we don't want to treat right edge as an ordinary square
+    [(mod x (dec (get @world-row-widths y))) y]))
 
 (defn mirror-map-edge
   [square]
@@ -78,12 +79,11 @@
 (defn get-rendered-square
   [screen-x screen-y]
   (let [[world-x world-y] (apply wraparound (screen-to-world screen-x screen-y))]
-    ; maybe do mirroring here, not on the map
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
       (let [square (@world [world-x world-y])
-            width (get @world-row-widths world-y)
             center-x (quot @canvas-cols 2)
+            width (get @world-row-widths world-y)
             screen-width (quot width 2)
             left-corner (- center-x (quot screen-width 2) (rem screen-width 2))
             right-corner (+ center-x (quot screen-width 2))]
