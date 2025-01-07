@@ -81,7 +81,7 @@
     ; maybe do mirroring here, not on the map
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
-      (let [square (@world [world-x world-y])            
+      (let [square (@world [world-x world-y])
             width (get @world-row-widths world-y)
             center-x (quot @canvas-cols 2)
             screen-width (quot width 2)
@@ -169,14 +169,12 @@
              next-index (inc index)]
          (cond
            ; go to next row, but add left edge of the mountain mirrored to right edge
-           (= ch \newline) (recur (-> world
-                                      (assoc [0 row] (make-square (mirror-map-edge (world [(dec col) row])))))
-                                  (conj widths col) 1 (inc row) next-index)
+           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (make-square (str ch))))
                         widths (inc col) row next-index)))))
-   {} [] 1 0 0))
+   {} [] 0 0 0))
 
 (defn create-world []
   (let [spawn-text (slurp "assets/spawn.txt")
