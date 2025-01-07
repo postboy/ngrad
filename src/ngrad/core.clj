@@ -112,6 +112,14 @@
       \9 [:move :up-right]
       \1 [:move :down-left]
       \3 [:move :down-right]
+      \h [:move :left]
+      \j [:move :down]
+      \k [:move :up]
+      \l [:move :right]
+      \y [:move :up-left]
+      \u [:move :up-right]
+      \b [:move :down-left]
+      \n [:move :down-right]
       [nil nil])))
 
 (defn walkable?
