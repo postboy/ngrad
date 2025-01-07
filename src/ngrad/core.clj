@@ -161,7 +161,7 @@
            ; go to next row, but add left edge of the mountain mirrored to right edge
            (= ch \newline) (recur (-> world
                                       (assoc [0 row] (make-square (mirror-map-edge (world [(dec col) row])))))
-                                  (conj widths (inc col)) 1 (inc row) next-index)
+                                  (conj widths col) 1 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (make-square (str ch))))
