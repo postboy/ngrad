@@ -81,7 +81,7 @@
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (apply wraparound (screen-to-world screen-x screen-y))
+  (let [[world-x world-y] (screen-to-world screen-x screen-y)
         square (@world [world-x world-y])]
     (if (some? square)
       (:ch square)
