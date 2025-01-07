@@ -88,7 +88,7 @@
             left-corner (- center-x (quot screen-width 2) (rem screen-width 2))
             right-corner (+ center-x (quot screen-width 2))]
         (if (= screen-x left-corner)
-          (:ch (@world [0 world-y]))
+          (mirror-map-edge (@world [(dec width) world-y]))
           (if (= screen-x right-corner)
             (:ch (@world [(dec width) world-y]))
             (if (and (> screen-x left-corner)
