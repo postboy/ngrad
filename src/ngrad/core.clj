@@ -77,7 +77,7 @@
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (screen-to-world screen-x screen-y)]
+  (let [[world-x world-y] (apply wraparound (screen-to-world screen-x screen-y))]
     ; maybe do mirroring here, not on the map
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
