@@ -41,7 +41,10 @@
   (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
     (let [width (get @world-row-widths y)]
-      [(mod x width) y])))
+      ; correct only off-by-one errors
+      (if (or (= x -1) (= x width))
+        [(mod x width) y]
+        [x y]))))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
