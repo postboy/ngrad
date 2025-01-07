@@ -40,8 +40,7 @@
   ; don't correct anything if there's no such row in world-row-widths
   (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
     [x y]
-    (let [width (get @world-row-widths y)]
-      [(mod x width) y])))
+    [(mod x (get @world-row-widths y)) y]))
 
 (defn mirror-map-edge
   [square]
