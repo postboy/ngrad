@@ -100,10 +100,6 @@
   (let [k (s/get-key-blocking @screen)]
     (case k
       \q [:quit nil]
-      :left [:move :left]
-      :down [:move :down]
-      :up [:move :up]
-      :right [:move :right]
       \4 [:move :left]
       \2 [:move :down]
       \8 [:move :up]
