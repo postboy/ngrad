@@ -83,9 +83,23 @@
   [screen-x screen-y]
   (let [[world-x world-y] (screen-to-world screen-x screen-y)
         square (@world [world-x world-y])]
-    (if (some? square)
-      (:ch square)
-      " ")))
+    ; maybe do mirroring here, not on the map
+    (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
+      " "
+      (let [width (get @world-row-widths world-y)
+            center-x (quot @canvas-cols 2)
+            screen-width (quot width 2)
+            left-corner (- center-x (quot screen-width 2) (rem screen-width 2))
+            right-corner (+ center-x (quot screen-width 2))]
+        (if (= screen-x left-corner)
+          (:ch (@world [0 world-y]))
+          (if (= screen-x right-corner)
+            (:ch (@world [(dec width) world-y]))
+            (if (and (> screen-x left-corner)
+                     (< screen-x right-corner)
+                     (some? square))
+              (:ch square)
+              " ")))))))
 
 (defn render
   "Draw the world and the player on the screen."
