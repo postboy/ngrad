@@ -20,7 +20,7 @@
 
 (defn make-square [ch] (new Square ch))
 
-(def walkable-object? #{"\\" "_" "|"})
+(def walkable-object? #{"\\" "_" "|" "/"})
 
 ; Utility functions
 (defn create-screen
@@ -45,6 +45,14 @@
       (if (or (= x -1) (= x width))
         [(mod x width) y]
         [x y]))))
+
+(defn mirror-map-edge
+  [square]
+  (let [ch (:ch square)]
+    (case ch
+      "\\" "/"
+      "/" "\\"
+      ch)))
 
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
@@ -150,13 +158,15 @@
        (let [ch (get array index)
              next-index (inc index)]
          (cond
-           ; go to next row
-           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
+           ; go to next row, but add left edge of the mountain mirrored to right edge
+           (= ch \newline) (recur (-> world
+                                      (assoc [0 row] (make-square (mirror-map-edge (world [(dec col) row])))))
+                                  (conj widths (inc col)) 1 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (make-square (str ch))))
                         widths (inc col) row next-index)))))
-   {} [] 0 0 0))
+   {} [] 1 0 0))
 
 (defn create-world []
   (let [spawn-text (slurp "assets/spawn.txt")
