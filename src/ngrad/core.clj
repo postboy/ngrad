@@ -52,6 +52,7 @@
       "/" "\\"
       ch)))
 
+; TODO: correspond to rendering
 (defn calc-coords
   "Calculate the new coordinates after moving dir from [x y].
    Does not do any bounds checking, so (calc-coords 0 0 :left) will
@@ -77,7 +78,16 @@
         delta-y (- center-y @player-y)
         world-x (- screen-x delta-x)
         world-y (- screen-y delta-y)]
-    [world-x world-y]))
+    ; don't correct anything if there's no such row in world-row-widths
+    (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
+      [world-x world-y]
+      ; when user stands on the last column in the row there's last columns above and below him too
+      ; despite the fact that all rows have different lengths
+      (let [center-line-width (get @world-row-widths @player-y)
+            this-line-width (get @world-row-widths world-y)
+            this-line-center (math/round (* (/ @player-x (dec center-line-width)) (dec this-line-width)))
+            corrected-world-x (+ (- this-line-center center-x) screen-x)]
+        [corrected-world-x world-y]))))
 
 (defn get-rendered-square
   [screen-x screen-y]
