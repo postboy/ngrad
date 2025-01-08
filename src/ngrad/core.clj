@@ -1,6 +1,7 @@
 (ns ngrad.core
   (:require [lanterna.screen :as s]
-            [clojure.string :as str]))
+            [clojure.string :as string]
+            [clojure.math :as math]))
 
 ; World/screen state
 ; map instead of vector seems excessive but probably will be useful in the
@@ -69,12 +70,14 @@
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn screen-to-world
-  [x y]
+  [screen-x screen-y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
         delta-x (- center-x @player-x)
-        delta-y (- center-y @player-y)]
-    [(- x delta-x) (- y delta-y)]))
+        delta-y (- center-y @player-y)
+        world-x (- screen-x delta-x)
+        world-y (- screen-y delta-y)]
+    [world-x world-y]))
 
 (defn get-rendered-square
   [screen-x screen-y]
@@ -180,7 +183,7 @@
 
 (defn create-world []
   (let [spawn-text (slurp "assets/spawn.txt")
-        [x y] (int-array (map #(Integer/parseInt %) (str/split-lines spawn-text)))
+        [x y] (int-array (map #(Integer/parseInt %) (string/split-lines spawn-text)))
         [local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world)
             (ref-set world-row-widths local-widths)
