@@ -85,8 +85,8 @@
             center-x (quot @canvas-cols 2)
             width (get @world-row-widths world-y)
             screen-width (quot width 2)
-            left-corner (- center-x (quot screen-width 2) (rem screen-width 2))
-            right-corner (+ center-x (quot screen-width 2))]
+            left-corner (- center-x (quot screen-width 2))
+            right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
         (if (= screen-x left-corner)
           (mirror-map-edge (@world [(dec width) world-y]))
           (if (= screen-x right-corner)
