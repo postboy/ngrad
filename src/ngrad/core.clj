@@ -52,22 +52,6 @@
       "/" "\\"
       ch)))
 
-; TODO: correspond to rendering
-(defn calc-coords
-  "Calculate the new coordinates after moving dir from [x y].
-   Does not do any bounds checking, so (calc-coords 0 0 :left) will
-   return [-1 0] and let you deal with it."
-  [x y dir]
-  (case dir
-    :left       [(dec x) y]
-    :right      [(inc x) y]
-    :up         [x (dec y)]
-    :down       [x (inc y)]
-    :up-left    [(dec x) (dec y)]
-    :up-right   [(inc x) (dec y)]
-    :down-left  [(dec x) (inc y)]
-    :down-right [(inc x) (inc y)]))
-
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn screen-to-world
@@ -88,6 +72,21 @@
             this-line-center (math/round (* (/ @player-x (dec center-line-width)) (dec this-line-width)))
             corrected-world-x (+ (- this-line-center center-x) screen-x)]
         [corrected-world-x world-y]))))
+
+(defn calc-screen-coords
+  "Calculate the new screen coordinates after moving dir from current position."
+  [dir]
+    (let [center-x (quot @canvas-cols 2)
+          center-y (quot @canvas-rows 2)]
+      (case dir
+        :left       [(dec center-x) center-y]
+        :right      [(inc center-x) center-y]
+        :up         [center-x (dec center-y)]
+        :down       [center-x (inc center-y)]
+        :up-left    [(dec center-x) (dec center-y)]
+        :up-right   [(inc center-x) (dec center-y)]
+        :down-left  [(dec center-x) (inc center-y)]
+        :down-right [(inc center-x) (inc center-y)])))
 
 (defn get-rendered-square
   [screen-x screen-y]
@@ -168,7 +167,7 @@
 (defmethod handle-command :move [_ dir]
   "Move the player in the given direction."
   (dosync
-   (let [[x y] (apply wraparound (calc-coords @player-x @player-y dir))]
+   (let [[x y] (apply wraparound (apply screen-to-world (calc-screen-coords dir)))]
      (when (walkable? x y)
        (ref-set player-x x)
        (ref-set player-y y)))))
