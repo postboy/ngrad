@@ -35,15 +35,6 @@
     (dosync (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
-(defn wraparound
-  "Very simplistic, physically incorrect wraparound algorithm for mountain."
-  [x y]
-  ; don't correct anything if there's no such row in world-row-widths
-  (if (or (not (>= y 0)) (not (< y (count @world-row-widths))))
-    [x y]
-    ; decrement because we don't want to treat right edge as an ordinary square
-    [(mod x (dec (get @world-row-widths y))) y]))
-
 (defn mirror-map-edge
   [square]
   (let [ch (:ch square)]
@@ -70,7 +61,9 @@
       (let [center-line-width (get @world-row-widths @player-y)
             this-line-width (get @world-row-widths world-y)
             this-line-center (math/round (* (/ @player-x (dec center-line-width)) (dec this-line-width)))
-            corrected-world-x (+ (- this-line-center center-x) screen-x)]
+            ; modular arithmetics to wrap around the mountain map
+            ; decrement because we don't want to treat right edge as an ordinary square
+            corrected-world-x (mod (+ (- this-line-center center-x) screen-x) (dec this-line-width))]
         [corrected-world-x world-y]))))
 
 (defn calc-screen-coords
@@ -90,7 +83,7 @@
 
 (defn get-rendered-square
   [screen-x screen-y]
-  (let [[world-x world-y] (apply wraparound (screen-to-world screen-x screen-y))]
+  (let [[world-x world-y] (screen-to-world screen-x screen-y)]
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
       (let [square (@world [world-x world-y])
@@ -167,7 +160,7 @@
 (defmethod handle-command :move [_ dir]
   "Move the player in the given direction."
   (dosync
-   (let [[x y] (apply wraparound (apply screen-to-world (calc-screen-coords dir)))]
+   (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
      (when (walkable? x y)
        (ref-set player-x x)
        (ref-set player-y y)))))
