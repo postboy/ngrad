@@ -203,8 +203,8 @@
         [local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world)
             (ref-set world-row-widths local-widths)
-            (ref-set player-x x)
-            (ref-set player-y y))))
+            (ref-set player-x (dec x))
+            (ref-set player-y (dec y)))))
 
 (defn game-loop []
   (render)
