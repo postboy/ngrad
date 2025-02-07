@@ -118,7 +118,7 @@
 (defn render
   "Draw the world and the player on the screen."
   []
-  (println (inc @player-x) (inc @player-y))
+  ;(println (inc @player-x) (inc @player-y))
   (dosync
    ; draw the world
    (doseq [x (range @canvas-cols)
