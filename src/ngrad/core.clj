@@ -188,7 +188,7 @@
              next-index (inc index)]
          (cond
            ; ignore it
-           (= ch \return) (recur world widths col row next-index)
+           (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
            ; go to next row
            (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
