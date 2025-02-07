@@ -43,11 +43,19 @@
       "/" "\\"
       ch)))
 
+; fix coordinates so if you can go up then you can also go down by same squares
 (defn recalculate-x
   [source-x source-y target-y]
   (let [source-line-width (dec (get @world-row-widths source-y))
         target-line-width (dec (get @world-row-widths target-y))]
-    (math/round (* (/ source-x source-line-width) target-line-width))))
+    ; previous line is special: we ensure it doesn't move horizontally when you go up
+    (if (not (= source-y (dec target-y)))
+      (math/round (* (/ source-x source-line-width) target-line-width))
+      (let [target-x-floor (int (math/floor (* (/ source-x source-line-width) target-line-width)))
+            target-x-ceil (int (math/ceil (* (/ source-x source-line-width) target-line-width)))]
+        (if (= source-x (math/round (* (/ target-x-floor target-line-width) source-line-width)))
+          target-x-floor
+          target-x-ceil)))))
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
