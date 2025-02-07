@@ -43,6 +43,12 @@
       "/" "\\"
       ch)))
 
+(defn recalculate-x
+  [source-x source-y target-y]
+  (let [source-line-width (dec (get @world-row-widths source-y))
+        target-line-width (dec (get @world-row-widths target-y))]
+    (math/round (* (/ source-x source-line-width) target-line-width))))
+
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn screen-to-world
@@ -58,12 +64,11 @@
       [world-x world-y]
       ; when user stands on the last column in the row there's last columns above and below him too
       ; despite the fact that all rows have different lengths
-      (let [center-line-width (get @world-row-widths @player-y)
-            this-line-width (get @world-row-widths world-y)
-            this-line-center (math/round (* (/ @player-x (dec center-line-width)) (dec this-line-width)))
+      (let [this-line-width (dec (get @world-row-widths world-y))
+            this-line-center (recalculate-x @player-x @player-y world-y)
             ; modular arithmetics to wrap around the mountain map
             ; decrement because we don't want to treat right edge as an ordinary square
-            corrected-world-x (mod (+ (- this-line-center center-x) screen-x) (dec this-line-width))]
+            corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
         [corrected-world-x world-y]))))
 
 (defn calc-screen-coords
