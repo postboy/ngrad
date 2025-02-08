@@ -1,4 +1,4 @@
-# ngrad
+# roguehike
 
 A simple roguelike not-quite game in Clojure. Go climb a virtual mountain here!
 

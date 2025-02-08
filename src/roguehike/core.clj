@@ -1,4 +1,4 @@
-(ns ngrad.core
+(ns roguehike.core
   (:require [lanterna.screen :as s]
             [clojure.string :as string]
             [clojure.math :as math]))
