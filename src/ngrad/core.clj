@@ -14,13 +14,6 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-; Data structures
-; record instead of char/string seems excessive but probably will be useful in
-; the future
-(defrecord Square [ch])
-
-(defn make-square [ch] (new Square ch))
-
 (def walkable-object? #{"\\" "_" "|" "/"})
 
 ; Utility functions
@@ -37,11 +30,10 @@
 
 (defn mirror-map-edge
   [square]
-  (let [ch (:ch square)]
-    (case ch
+    (case square
       "\\" "/"
       "/" "\\"
-      ch)))
+      square))
 
 ; fix coordinates so if you can go up then you can also go down by same squares
 (defn recalculate-x
@@ -108,11 +100,11 @@
         (if (= screen-x left-corner)
           (mirror-map-edge (@world [(dec width) world-y]))
           (if (= screen-x right-corner)
-            (:ch (@world [(dec width) world-y]))
+            (@world [(dec width) world-y])
             (if (and (> screen-x left-corner)
                      (< screen-x right-corner)
                      (some? square))
-              (:ch square)
+              square
               " ")))))))
 
 (defn render
@@ -163,7 +155,7 @@
    solid objects, so a player might not actually end up moving."
   [x y]
   (let [dest (@world [x y])]
-    (and (some? dest) (walkable-object? (:ch dest)))))
+    (and (some? dest) (walkable-object? dest))))
 
 (defmulti handle-command
   (fn [command _] command))
@@ -193,7 +185,7 @@
            (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
-                            (assoc [col row] (make-square (str ch))))
+                            (assoc [col row] (str ch)))
                         widths (inc col) row next-index)))))
    {} [] 0 0 0))
 
