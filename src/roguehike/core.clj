@@ -67,7 +67,6 @@
       (let [this-line-width (get @world-row-widths world-y)
             this-line-center (recalculate-x @player-x @player-y world-y)
             ; modular arithmetics to wrap around the mountain map
-            ; decrement because we don't want to treat right edge as an ordinary square
             corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
         [corrected-world-x world-y]))))
 
