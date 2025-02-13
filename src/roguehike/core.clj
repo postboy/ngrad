@@ -38,8 +38,8 @@
 ; fix coordinates so if you can go up then you can also go down by same squares
 (defn recalculate-x
   [source-x source-y target-y]
-  (let [source-line-width (dec (get @world-row-widths source-y))
-        target-line-width (dec (get @world-row-widths target-y))]
+  (let [source-line-width (get @world-row-widths source-y)
+        target-line-width (get @world-row-widths target-y)]
     ; previous line is special: we ensure it doesn't move horizontally when you go up
     (if (not (= source-y (dec target-y)))
       (math/round (* (/ source-x source-line-width) target-line-width))
@@ -64,7 +64,7 @@
       [world-x world-y]
       ; when user stands on the last column in the row there's last columns above and below him too
       ; despite the fact that all rows have different lengths
-      (let [this-line-width (dec (get @world-row-widths world-y))
+      (let [this-line-width (get @world-row-widths world-y)
             this-line-center (recalculate-x @player-x @player-y world-y)
             ; modular arithmetics to wrap around the mountain map
             ; decrement because we don't want to treat right edge as an ordinary square
@@ -94,13 +94,14 @@
       (let [square (@world [world-x world-y])
             center-x (quot @canvas-cols 2)
             width (get @world-row-widths world-y)
-            screen-width (quot width 2)
+            ; right edge will look bad without inc
+            screen-width (quot (inc width) 2)
             left-corner (- center-x (quot screen-width 2))
             right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
         (if (= screen-x left-corner)
-          (mirror-map-edge (@world [(dec width) world-y]))
+          (mirror-map-edge (@world [width world-y]))
           (if (= screen-x right-corner)
-            (@world [(dec width) world-y])
+            (@world [width world-y])
             (if (and (> screen-x left-corner)
                      (< screen-x right-corner)
                      (some? square))
@@ -182,7 +183,8 @@
            ; ignore it
            (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
            ; go to next row
-           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
+           ; last symbol in a row is special, it's a map edge, so don't count it
+           (= ch \newline) (recur world (conj widths (dec col)) 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (str ch)))
