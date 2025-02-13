@@ -98,9 +98,10 @@
             screen-width (quot (inc width) 2)
             left-corner (- center-x (quot screen-width 2))
             right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
+        ; special case for the top
         (if (= screen-x left-corner)
           (mirror-map-edge (@world [width world-y]))
-          (if (= screen-x right-corner)
+          (if (and (= screen-x right-corner) (not (= left-corner (dec right-corner))))
             (@world [width world-y])
             (if (and (> screen-x left-corner)
                      (< screen-x right-corner)
