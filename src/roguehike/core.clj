@@ -38,8 +38,8 @@
 ; fix coordinates so if you can go up then you can also go down by same squares
 (defn recalculate-x
   [source-x source-y target-y]
-  (let [source-line-width (get @world-row-widths source-y)
-        target-line-width (get @world-row-widths target-y)]
+  (let [source-line-width (dec (get @world-row-widths source-y))
+        target-line-width (dec (get @world-row-widths target-y))]
     ; previous line is special: we ensure it doesn't move horizontally when you go up
     (if (not (= source-y (dec target-y)))
       (math/round (* (/ source-x source-line-width) target-line-width))
