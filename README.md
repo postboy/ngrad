@@ -2,7 +2,9 @@
 
 A simple roguelike not-quite game in Clojure. Go climb a virtual mountain here!
 
-There is no winning, losing, or saving. Use numpad or arrow keys for moving. Press q to exit.
+Use numpad or vi keys (hjklyubn) for moving. Press q to exit.
+
+Unlike most roguelikes, roguehike uses side-view camera angle. There is no saving, winning, or losing, but the mountains are always worth climbing.
 
 ## Building
 
