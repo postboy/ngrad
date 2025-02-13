@@ -40,8 +40,8 @@
   [source-x source-y target-y]
   (let [source-line-width (dec (get @world-row-widths source-y))
         target-line-width (dec (get @world-row-widths target-y))]
-    ; previous line is special: we ensure it doesn't move horizontally when you go up
-    (if (not (= source-y (inc target-y)))
+    ; line just down the source-y is special: we ensure it doesn't move horizontally when you go up
+    (if (not (= source-y (dec target-y)))
       (math/round (* (/ source-x source-line-width) target-line-width))
       (let [target-x-floor (int (math/floor (* (/ source-x source-line-width) target-line-width)))
             target-x-ceil (int (math/ceil (* (/ source-x source-line-width) target-line-width)))]
