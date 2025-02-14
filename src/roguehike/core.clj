@@ -40,13 +40,8 @@
   [source-x source-y target-y]
   (let [source-line-width (dec (get @world-row-widths source-y))
         target-line-width (dec (get @world-row-widths target-y))]
-    ; line just down the source-y is special: we ensure it doesn't move horizontally when you go up
-    (if (not (= source-y (dec target-y)))
-      (math/round (* (/ source-x source-line-width) target-line-width))
-      (let [target-x-floor (int (math/floor (* (/ source-x source-line-width) target-line-width)))]
-        (if (= source-x (math/round (* (/ target-x-floor target-line-width) source-line-width)))
-          target-x-floor
-          (inc target-x-floor))))))
+    ; TODO: it doesn't work as expected in the middle of the line, so map had to be hacked here and there
+    (math/round (* (/ source-x source-line-width) target-line-width))))
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
