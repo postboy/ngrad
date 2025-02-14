@@ -43,11 +43,10 @@
     ; line just down the source-y is special: we ensure it doesn't move horizontally when you go up
     (if (not (= source-y (dec target-y)))
       (math/round (* (/ source-x source-line-width) target-line-width))
-      (let [target-x-floor (int (math/floor (* (/ source-x source-line-width) target-line-width)))
-            target-x-ceil (int (math/ceil (* (/ source-x source-line-width) target-line-width)))]
+      (let [target-x-floor (int (math/floor (* (/ source-x source-line-width) target-line-width)))]
         (if (= source-x (math/round (* (/ target-x-floor target-line-width) source-line-width)))
           target-x-floor
-          target-x-ceil)))))
+          (inc target-x-floor))))))
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
